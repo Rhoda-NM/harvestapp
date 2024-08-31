@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FoodBankCard from "./FoodBankCard";
+import "./FoodBankCard.css";
 
 function FoodBanksList() {
   const [foodbanks, setFoodbanks] = useState([]);
@@ -9,7 +10,7 @@ function FoodBanksList() {
   useEffect(() => {
     const fetchFoodbanks = async () => {
       try {
-        const response = await fetch("/foodbanks");
+        const response = await fetch("http://127.0.0.1:5000/foodbanks");
         const allFoodBanks = await response.json();
         setFoodbanks(allFoodBanks);
       } catch (err) {

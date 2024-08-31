@@ -121,8 +121,22 @@ function Navbar() {
           <li>
             <NavLink href="#contact">Our Impact</NavLink>
           </li>
-          
-          
+          {isLoggedIn ? (
+            <>
+              <li>
+                <button onClick={handleLogout} className="logout-btn">
+                  Logout
+                </button>{" "}
+                {/* Functional logout button */}
+              </li>
+            </>
+          ) : (
+            <li>
+              <Link to="/signin">Sign In</Link>
+              <Link to="/foodbanklist">Foodbank List</Link>
+              <Link to="/foodbankdashboard">Foodbank Dashboard</Link>
+            </li>
+          )}
         </NavLinks>
         <ButtonContainer>
             <DropdownContainer>

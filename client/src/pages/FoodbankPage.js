@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import FoodBankList from "./../components/FoodBankList";
+import Donors from "./../components/Donors"
 
-function FoodbankPage() {
-  return <div>Foodbank</div>;
+function FoodBankPage() {
+  
+
+  return (
+    <div>
+      <Donors/>
+    </div>
+  );
 }
 
-export default FoodbankPage;
+export default FoodBankPage;
+
