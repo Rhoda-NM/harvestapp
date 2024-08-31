@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useAuth } from "./AuthContext"; 
 
 const NavbarContainer = styled.nav`
     display: flex;
@@ -55,6 +56,12 @@ const Button = styled.button`
 `;
 
 function Navbar() {
+    const { logout, isLoggedIn } = useAuth(); 
+
+    const handleLogout = () => {
+        logout(); // Call the logout function from your AuthContext
+        navigate('/'); // Navigate to the homepage after logout
+      };
     return (
         <>
         <NavDecorator />
@@ -65,6 +72,17 @@ function Navbar() {
                 <li><NavLink href="#about">Our Work</NavLink></li>
                 <li><NavLink href="#contact">Get Involved</NavLink></li>
                 <li><NavLink href="#contact">Our Impact</NavLink></li>
+                {isLoggedIn ? (
+            <>
+              <li>
+                <button onClick={handleLogout} className="logout-btn">Logout</button> {/* Functional logout button */}
+              </li>
+            </>
+          ) : (
+            <li>
+              <Link to="/signin">Sign In</Link>
+            </li>
+          )}
             </NavLinks>
             <ButtonContainer>
                 <Button primary>Register</Button>
