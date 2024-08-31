@@ -167,7 +167,6 @@ class DonorResource(Resource):
             return {'message': 'An error occurred while deleting the donor', 'error': str(e)}, 500
 
 class DonationsResource(Resource):
-    #@jwt_required()
     def get(self, donation_id=None, donor_id=None):
         if donation_id:
             # Fetch and return a single donation by ID
@@ -182,10 +181,12 @@ class DonationsResource(Resource):
             donations = Donation.query.all()
             return {'donations': [d.to_dict() for d in donations]}, 200  
 
-    #@jwt_required()
     def post(self):
         data = request.get_json()
-        current_user_id = get_jwt_identity()
+        
+        # No need to get the JWT identity since it's removed
+        # current_user_id = get_jwt_identity()
+        current_user_id = data.get('donor_id')  # Example: if donor_id is provided in the request
 
         try:
             new_donation = Donation(
@@ -202,10 +203,12 @@ class DonationsResource(Resource):
             db.session.rollback()
             return {'message': 'Invalid data provided'}, 400
 
-    #@jwt_required()
     def patch(self, donation_id):
         donation = Donation.query.get_or_404(donation_id)
-        current_user_id = get_jwt_identity()
+        
+        # No need to get the JWT identity since it's removed
+        # current_user_id = get_jwt_identity()
+        current_user_id = donation.donor_id  # Assuming you want to allow any user to update
 
         if donation.donor_id != current_user_id:
             return {'message': 'Unauthorized'}, 403
@@ -222,17 +225,20 @@ class DonationsResource(Resource):
             db.session.rollback()
             return {'message': 'Invalid data provided'}, 400
 
-    #@jwt_required()
     def delete(self, donation_id):
         donation = Donation.query.get_or_404(donation_id)
-        current_user_id = get_jwt_identity()
+        
+        # No need to get the JWT identity since it's removed
+        # current_user_id = get_jwt_identity()
+        current_user_id = donation.donor_id  # Assuming you want to allow any user to delete
 
         if donation.donor_id != current_user_id:
             return {'message': 'Unauthorized'}, 403
 
         db.session.delete(donation)
         db.session.commit()
-        return '', 204       
+        return '', 204
+
         
 class FoodBankResource(Resource):
     def __init__(self):

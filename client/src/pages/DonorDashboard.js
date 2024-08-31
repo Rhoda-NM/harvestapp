@@ -2,18 +2,20 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "./DonorDashboard.css";
+import NewDonationForm from "../components/NewDonation";
+import { useNavigate } from "react-router-dom";
+
 
 const Dashboard = ({ userId }) => {
   const [donations, setDonations] = useState([]);
   const [foodBanks, setFoodBanks] = useState([]);
-  const [newDonation, setNewDonation] = useState("");
-
+  
   useEffect(() => {
     // Fetch donations and available food banks
     const fetchData = async () => {
       try {
-        const donationsResponse = await axios.get(`/api/donations/${userId}`);
-        const foodBanksResponse = await axios.get("/api/foodBanks");
+        const donationsResponse = await axios.get(`/donations/${userId}`);
+        const foodBanksResponse = await axios.get("/foodBanks");
         setDonations(donationsResponse.data);
         setFoodBanks(foodBanksResponse.data);
       } catch (error) {
@@ -24,19 +26,14 @@ const Dashboard = ({ userId }) => {
     fetchData();
   }, [userId]);
 
-  const handlePostDonation = async () => {
-    try {
-      await axios.post("/api/donations", { userId, donation: newDonation });
-      setDonations([...donations, { donation: newDonation }]); // Optimistic update
-      setNewDonation("");
-    } catch (error) {
-      console.error("Error posting donation:", error);
-    }
-  };
+  const [showForm, setShowForm] = useState(false);
 
+  const handlePostDonation = () => {
+    setShowForm(!showForm); // Toggle the form visibility
+  };
   const handleDeleteDonation = async (donationId) => {
     try {
-      await axios.delete(`/api/donations/${donationId}`);
+      await axios.delete(`/donations/${donationId}`);
       setDonations(donations.filter((donation) => donation.id !== donationId)); // Optimistic update
     } catch (error) {
       console.error("Error deleting donation:", error);
@@ -46,6 +43,12 @@ const Dashboard = ({ userId }) => {
   return (
     <div>
       <h1>Dashboard</h1>
+      <div>
+      <button onClick={handlePostDonation}>
+        {showForm ? 'Hide Donation Form' : 'Post Donation'}
+      </button>
+      {showForm && <NewDonationForm />}
+    </div>
       <div>
         <h2>My Donations</h2>
         <ul>
@@ -58,12 +61,6 @@ const Dashboard = ({ userId }) => {
             </li>
           ))}
         </ul>
-        <textarea
-          value={newDonation}
-          onChange={(e) => setNewDonation(e.target.value)}
-          placeholder="Post a new donation"
-        />
-        <button onClick={handlePostDonation}>Post Donation</button>
       </div>
       <div>
         <h2>Available Food Banks</h2>

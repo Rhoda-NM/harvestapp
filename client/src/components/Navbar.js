@@ -95,7 +95,7 @@ function Navbar() {
             </>
           ) : (
             <li>
-              <Link to="/signin">Sign In</Link>
+              <Link to="/donordashboard">Sign In</Link>
             </li>
           )}
         </NavLinks>
