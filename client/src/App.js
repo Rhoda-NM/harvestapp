@@ -10,6 +10,7 @@ import Donors from "./components/Donors";
 import NewDonationForm from "./components/NewDonation";
 import FoodBanksList from "./components/FoodBankList";
 import Donations from "./components/Donations";
+import Dashboard from "./pages/DonorDashboard.js";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route exact path="/bank/register" element={<FoodBankForm />} />
           <Route exact path="/foodbank-dashboard" element={<FoodbankDashboard />} />
           <Route exact path="/donors" element={<Donors />} />
+          <Route exact path="/donor-dashboard" element={<Dashboard/>} />
           <Route exact path="/newdonation" element={<NewDonationForm />} />
           <Route exact path="/foodbanklist" element={<FoodBanksList />} />
           <Route exact path="/donations" element={<Donations />} />
