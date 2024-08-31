@@ -1,8 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import { useAuth } from "./AuthContext";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import styled from 'styled-components';
+import { useAuth } from "./AuthContext"; 
+import { useNavigate, Link } from 'react-router-dom';
 
 const NavbarContainer = styled.nav`
   display: flex;

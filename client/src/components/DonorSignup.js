@@ -1,141 +1,180 @@
-import React, { useState } from 'react';
-import './DonorForm.css'; // Make sure to style your form
+import React from 'react';
+import styled from 'styled-components';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+
 
 const DonorForm = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-
-  const validatePasswords = () => {
-    return password === confirmPassword;
+  const initialValues = {
+    username: '',
+    email: '',
+    name: '',
+    location: '',
+    password: '',
+    confirmPassword: '',
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const validationSchema = Yup.object({
+    username: Yup.string().required('Username is required'),
+    email: Yup.string().email('Invalid email address').required('Email is required'),
+    name: Yup.string().required('Name is required'),
+    location: Yup.string(),
+    password: Yup.string()
+      .required('Password is required')
+      .min(8, 'Password must be at least 8 characters'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required'),
+  });
 
-    if (!validatePasswords()) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    const donorData = {
-      username,
-      email,
-      name,
-      location,
-      password
-    };
-
+  const handleSubmit = async (values, { setSubmitting, setStatus, resetForm }) => {
     try {
       const response = await fetch('/donors', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(donorData),
+        body: JSON.stringify(values),
       });
 
       if (response.ok) {
-        const result = await response.json();
-        setMessage('Donor registered successfully!');
-        // Optionally reset the form fields here
-        setUsername('');
-        setEmail('');
-        setName('');
-        setLocation('');
-        setPassword('');
-        setConfirmPassword('');
+        setStatus({ success: 'Donor registered successfully!' });
+        resetForm();
       } else {
         const errorResult = await response.json();
-        setError(errorResult.message || 'An error occurred');
+        setStatus({ error: errorResult.message || 'An error occurred' });
       }
     } catch (err) {
       console.error('Error:', err);
-      setError('An error occurred');
+      setStatus({ error: 'An error occurred' });
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="donor-form-container">
-      <h2>Register as a Donor</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
+    <DonorFormContainer>
+      <FormTitle>Register as a Donor</FormTitle>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting, status }) => (
+          <Form>
+            <FormGroup>
+              <Label htmlFor="username">Username:</Label>
+              <Input type="text" id="username" name="username" />
+              <ErrorMessage name="username" component={ErrorText} />
+            </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+            <FormGroup>
+              <Label htmlFor="email">Email:</Label>
+              <Input type="email" id="email" name="email" />
+              <ErrorMessage name="email" component={ErrorText} />
+            </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
+            <FormGroup>
+              <Label htmlFor="name">Name:</Label>
+              <Input type="text" id="name" name="name" />
+              <ErrorMessage name="name" component={ErrorText} />
+            </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="location">Location:</label>
-          <input
-            type="text"
-            id="location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </div>
+            <FormGroup>
+              <Label htmlFor="location">Location:</Label>
+              <Input type="text" id="location" name="location" />
+              <ErrorMessage name="location" component={ErrorText} />
+            </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+            <FormGroup>
+              <Label htmlFor="password">Password:</Label>
+              <Input type="password" id="password" name="password" />
+              <ErrorMessage name="password" component={ErrorText} />
+            </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
+            <FormGroup>
+              <Label htmlFor="confirmPassword">Confirm Password:</Label>
+              <Input type="password" id="confirmPassword" name="confirmPassword" />
+              <ErrorMessage name="confirmPassword" component={ErrorText} />
+            </FormGroup>
 
-        <button type="submit">Register</button>
-      </form>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Registering...' : 'Register'}
+            </Button>
 
-      {message && <p className="success-message">{message}</p>}
-      {error && <p className="error-message">{error}</p>}
-    </div>
+            {status && status.success && <SuccessMessage>{status.success}</SuccessMessage>}
+            {status && status.error && <ErrorMessageContainer>{status.error}</ErrorMessageContainer>}
+          </Form>
+        )}
+      </Formik>
+    </DonorFormContainer>
   );
 };
+
+const DonorFormContainer = styled.div`
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #FFF8E1; /* Soft Cream */
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const FormTitle = styled.h2`
+  text-align: center;
+  color: #2E7D32; /* Deep Forest Green */
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 15px;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #424242; /* Charcoal Gray */
+`;
+
+const Input = styled(Field)`
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50; /* Primary Green */
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #388E3C; /* Darker shade of green */
+  }
+`;
+
+const ErrorText = styled.div`
+  color: #FF9800; /* Earthy Orange */
+  margin-top: 5px;
+  font-size: 14px;
+`;
+
+const SuccessMessage = styled.p`
+  color: #4CAF50; /* Primary Green */
+  font-weight: bold;
+  text-align: center;
+`;
+
+const ErrorMessageContainer = styled.p`
+  color: #FF9800; /* Earthy Orange */
+  font-weight: bold;
+  text-align: center;
+`;
 
 export default DonorForm;

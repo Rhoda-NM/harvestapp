@@ -1,159 +1,195 @@
-import React, { useState } from 'react';
-import './FoodBankForm.css'; // Make sure this CSS file contains the responsive styles
+import React from 'react';
+import styled from 'styled-components';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 const FoodBankForm = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState('');
-  const [location, setLocation] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-
-  const validateForm = () => {
-    if (!username || !email || !name || !location || !password) {
-      setError('Please fill in all required fields.');
-      return false;
-    }
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-      setError('Please enter a valid email address.');
-      return false;
-    }
-    return true;
+  const initialValues = {
+    username: '',
+    email: '',
+    name: '',
+    description: '',
+    image: '',
+    location: '',
+    password: '',
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const validationSchema = Yup.object({
+    username: Yup.string().required('Username is required'),
+    email: Yup.string().email('Invalid email address').required('Email is required'),
+    name: Yup.string().required('Food Bank Name is required'),
+    description: Yup.string(),
+    image: Yup.string().url('Invalid URL format'),
+    location: Yup.string().required('Location is required'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(8, 'Password must be at least 8 characters'),
+  });
 
-    if (!validateForm()) return;
-
-    const foodBankData = {
-      username,
-      email,
-      name,
-      description,
-      image,
-      location,
-      password,
-    };
-
+  const handleSubmit = async (values, { setSubmitting, setStatus, resetForm }) => {
     try {
       const response = await fetch('/foodbanks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(foodBankData),
+        body: JSON.stringify(values),
       });
 
       if (response.ok) {
-        const result = await response.json();
-        setMessage('Food bank created successfully!');
-        setUsername('');
-        setEmail('');
-        setName('');
-        setDescription('');
-        setImage('');
-        setLocation('');
-        setPassword('');
+        setStatus({ success: 'Food bank created successfully!' });
+        resetForm();
       } else {
         const errorResult = await response.json();
-        setError(errorResult.message || 'An error occurred');
+        setStatus({ error: errorResult.message || 'An error occurred' });
       }
     } catch (err) {
       console.error('Error:', err);
-      setError('An error occurred');
+      setStatus({ error: 'An error occurred' });
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="foodbank-form-container">
-      <h2>Create a Food Bank</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
+    <FoodBankFormContainer>
+      <FormTitle>Create a Food Bank</FormTitle>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting, status }) => (
+          <Form>
+            <FormGroup>
+              <Label htmlFor="username">Username:</Label>
+              <Input type="text" id="username" name="username" />
+              <ErrorMessage name="username" component={ErrorText} />
+            </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+            <FormGroup>
+              <Label htmlFor="email">Email:</Label>
+              <Input type="email" id="email" name="email" />
+              <ErrorMessage name="email" component={ErrorText} />
+            </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="name">Food Bank Name:</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
+            <FormGroup>
+              <Label htmlFor="name">Food Bank Name:</Label>
+              <Input type="text" id="name" name="name" />
+              <ErrorMessage name="name" component={ErrorText} />
+            </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="description">Description:</label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
+            <FormGroup>
+              <Label htmlFor="description">Description:</Label>
+              <TextArea as="textarea" id="description" name="description" />
+              <ErrorMessage name="description" component={ErrorText} />
+            </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="image">Image URL:</label>
-          <input
-            type="text"
-            id="image"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
-        </div>
+            <FormGroup>
+              <Label htmlFor="image">Image URL:</Label>
+              <Input type="text" id="image" name="image" />
+              <ErrorMessage name="image" component={ErrorText} />
+            </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="location">Location:</label>
-          <input
-            type="text"
-            id="location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            required
-          />
-        </div>
+            <FormGroup>
+              <Label htmlFor="location">Location:</Label>
+              <Input type="text" id="location" name="location" />
+              <ErrorMessage name="location" component={ErrorText} />
+            </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+            <FormGroup>
+              <Label htmlFor="password">Password:</Label>
+              <Input type="password" id="password" name="password" />
+              <ErrorMessage name="password" component={ErrorText} />
+            </FormGroup>
 
-        <button type="submit">Create Food Bank</button>
-      </form>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Creating...' : 'Create Food Bank'}
+            </Button>
 
-      {message && <p className="success-message">{message}</p>}
-      {error && <p className="error-message">{error}</p>}
-    </div>
+            {status && status.success && <SuccessMessage>{status.success}</SuccessMessage>}
+            {status && status.error && <ErrorMessageContainer>{status.error}</ErrorMessageContainer>}
+          </Form>
+        )}
+      </Formik>
+    </FoodBankFormContainer>
   );
 };
+
+const FoodBankFormContainer = styled.div`
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #FFF8E1; /* Soft Cream */
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const FormTitle = styled.h2`
+  text-align: center;
+  color: #2E7D32; /* Deep Forest Green */
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 15px;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #424242; /* Charcoal Gray */
+`;
+
+const Input = styled(Field)`
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+`;
+
+const TextArea = styled(Field)`
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  resize: vertical;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50; /* Primary Green */
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #388E3C; /* Darker shade of green */
+  }
+`;
+
+const ErrorText = styled.div`
+  color: #FF9800; /* Earthy Orange */
+  margin-top: 5px;
+  font-size: 14px;
+`;
+
+const SuccessMessage = styled.p`
+  color: #4CAF50; /* Primary Green */
+  font-weight: bold;
+  text-align: center;
+`;
+
+const ErrorMessageContainer = styled.p`
+  color: #FF9800; /* Earthy Orange */
+  font-weight: bold;
+  text-align: center;
+`;
+
 
 export default FoodBankForm;
