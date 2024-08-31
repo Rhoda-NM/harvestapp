@@ -7,7 +7,7 @@ function FoodBankCard({ name, image, description, email, location }) {
     return <div>Loading...</div>;
   }
 
-  return (
+ return(
     <div className="food-bank-card">
       <img src={image} alt={name} />
       <h3>{name}</h3>

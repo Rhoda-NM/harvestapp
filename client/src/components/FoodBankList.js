@@ -3,6 +3,8 @@ import FoodBankCard from "./FoodBankCard";
 
 function FoodBanksList() {
   const [foodbanks, setFoodbanks] = useState([]);
+  const [filteredFoodbanks, setFilteredFoodbanks] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchFoodbanks = async () => {
@@ -17,19 +19,45 @@ function FoodBanksList() {
 
     fetchFoodbanks();
   }, []);
+
+  useEffect(() => {
+    const filtered = foodbanks.filter((foodbank) =>
+      foodbank.location.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredFoodbanks(filtered);
+  }, [search, foodbanks]);
+
   return (
     <div>
       <h1>Food Banks</h1>
-      {foodbanks.map((foodbank) => (
-        <FoodBankCard
-          key={foodbank._id}
-          name={foodbank.name}
-          image={foodbank.image}
-          description={foodbank.description}
-          email={foodbank.email}
-          location={foodbank.location}
-        />
-      ))}
+      <input
+        type="text"
+        className="search"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search item"
+      />
+      {filteredFoodbanks.length > 0
+        ? filteredFoodbanks.map((foodbank) => (
+            <FoodBankCard
+              key={foodbank._id}
+              name={foodbank.name}
+              image={foodbank.image}
+              description={foodbank.description}
+              email={foodbank.email}
+              location={foodbank.location}
+            />
+          ))
+        : foodbanks.map((foodbank) => (
+            <FoodBankCard
+              key={foodbank._id}
+              name={foodbank.name}
+              image={foodbank.image}
+              description={foodbank.description}
+              email={foodbank.email}
+              location={foodbank.location}
+            />
+          ))}
     </div>
   );
 }
