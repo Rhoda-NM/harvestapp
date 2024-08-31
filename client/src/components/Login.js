@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import styled from 'styled-components'
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -66,7 +68,7 @@ const LoginForm = () => {
 
   return (
     <>
-  
+    <Navbar />
     <LoginFormContainer>
       <FormTitle>Login</FormTitle>
       <form onSubmit={handleSubmit}>
@@ -98,7 +100,7 @@ const LoginForm = () => {
       {message && <SuccessMessage>{message}</SuccessMessage>}
       {error && <ErrorMessage>{error}</ErrorMessage>}
     </LoginFormContainer>
-  
+    <Footer />
     </>
   );
 };

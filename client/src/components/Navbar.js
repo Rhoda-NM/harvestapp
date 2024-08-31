@@ -109,17 +109,15 @@ function Navbar() {
         <Logo>HarvestShare</Logo>
         <NavLinks>
         <li>
-        <Link to="/">Home</Link>
+          <Link to="/"><NavLink href='#'>Home</NavLink></Link>
           </li>
           <li>
-            <NavLink href="#features">About Us</NavLink>
+            <NavLink href="#about">About Us</NavLink>
           </li>
           <li>
-            <NavLink href="#about">Our Work</NavLink>
+            <NavLink href="#features">Features</NavLink>
           </li>
-          <li>
-            <NavLink href="#contact">Get Involved</NavLink>
-          </li>
+          
           <li>
             <NavLink href="#contact">Our Impact</NavLink>
           </li>
