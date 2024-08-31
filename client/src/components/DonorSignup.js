@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import Footer from './Footer';
+import Navbar from './Navbar';
 
 
 const DonorForm = () => {
@@ -53,6 +55,8 @@ const DonorForm = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <DonorFormContainer>
       <FormTitle>Register as a Donor</FormTitle>
       <Formik
@@ -108,6 +112,8 @@ const DonorForm = () => {
         )}
       </Formik>
     </DonorFormContainer>
+    <Footer />
+    </>
   );
 };
 

@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import Footer from './Footer';
+import Navbar from './Navbar';
 
 const FoodBankForm = () => {
   const initialValues = {
@@ -52,6 +54,8 @@ const FoodBankForm = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <FoodBankFormContainer>
       <FormTitle>Create a Food Bank</FormTitle>
       <Formik
@@ -113,6 +117,8 @@ const FoodBankForm = () => {
         )}
       </Formik>
     </FoodBankFormContainer>
+    <Footer />
+    </>
   );
 };
 
