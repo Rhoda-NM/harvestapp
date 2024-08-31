@@ -97,6 +97,8 @@ function Navbar() {
           ) : (
             <li>
               <Link to="/signin">Sign In</Link>
+              <Link to="/foodbanklist">Foodbank List</Link>
+              <Link to="/foodbankdashboard">Foodbank Dashboard</Link>
             </li>
           )}
         </NavLinks>

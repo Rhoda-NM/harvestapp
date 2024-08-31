@@ -1,0 +1,39 @@
+.food-bank-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  max-width: 300px;
+  margin: 16px auto;
+  text-align: center;
+  background-color: #fff;
+}
+
+.food-bank-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.food-bank-card h3 {
+  margin: 12px 0;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.food-bank-card p {
+  margin: 8px 0;
+  color: #666;
+}
+
+.food-bank-card a {
+  display: inline-block;
+  margin: 8px 0;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.food-bank-card a:hover {
+  text-decoration: underline;
+}
