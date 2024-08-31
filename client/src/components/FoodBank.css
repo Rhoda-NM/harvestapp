@@ -1,107 +1,44 @@
-/* Base styles for the form container */
-.foodbank-form-container {
-    max-width: 100%;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ccc;
+/* FoodBank.css */
+.food-bank-card {
+    width: 200px; /* Adjust width as needed */
+    height: 300px; /* Adjust height as needed */
+    border: 1px solid #ddd;
     border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* General form styles */
-  form {
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 16px;
-  }
-  
-  .form-group input,
-  .form-group textarea {
-    width: 100%;
+    align-items: center;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 12px 20px;
+    margin: 10px;
     text-align: center;
+  }
+  
+  .food-bank-card img {
+    width: 100%;
+    height: 120px; /* Adjust height to fit within the card */
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    border-radius: 8px;
+  }
+  
+  .food-bank-card h3 {
+    font-size: 1.2rem;
+    margin: 10px 0;
+  }
+  
+  .food-bank-card p {
+    font-size: 0.9rem;
+    margin: 5px 0;
+  }
+  
+  .food-bank-card a {
+    color: #007bff;
     text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-top: 10px;
-    cursor: pointer;
-    border-radius: 4px;
+    font-size: 0.9rem;
+    margin: 5px 0;
   }
   
-  button:hover {
-    background-color: #45a049;
+  .food-bank-card a:hover {
+    text-decoration: underline;
   }
-  
-  .success-message {
-    color: green;
-    margin-top: 10px;
-  }
-  
-  .error-message {
-    color: red;
-    margin-top: 10px;
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 768px) {
-    .foodbank-form-container {
-      padding: 15px;
-    }
-  
-    .form-group label {
-      font-size: 14px;
-    }
-  
-    .form-group input,
-    .form-group textarea {
-      font-size: 14px;
-      padding: 8px;
-    }
-  
-    button {
-      font-size: 14px;
-      padding: 10px 15px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .foodbank-form-container {
-      padding: 10px;
-    }
-  
-    .form-group label {
-      font-size: 12px;
-    }
-  
-    .form-group input,
-    .form-group textarea {
-      font-size: 12px;
-      padding: 6px;
-    }
-  
-    button {
-      font-size: 12px;
-      padding: 8px 12px;
-    }
-  }
-  
+
