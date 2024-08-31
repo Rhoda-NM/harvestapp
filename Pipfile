@@ -17,6 +17,8 @@ bcrypt = "*"
 flask-bcrypt = "*"
 flask-jwt-extended = "*"
 gunicorn = "*"
+"requests.auth" = "*"
+requests = "*"
 
 [dev-packages]
 
