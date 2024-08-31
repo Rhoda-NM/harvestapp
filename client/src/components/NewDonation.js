@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './NewDonationForm.css'; // Import the CSS file
 
 const CreateDonation = () => {
     const [donorId, setDonorId] = useState('');
@@ -40,6 +41,7 @@ const CreateDonation = () => {
             const result = await response.json();
             console.log('Success:', result);
             setSuccess(true);
+            setError(null); // Clear any previous errors
         } catch (err) {
             console.error('Error:', err);
             setError(err.message);
@@ -48,11 +50,11 @@ const CreateDonation = () => {
     };
 
     return (
-        <div>
+        <div className="create-donation-container">
             <h1>Create a New Donation</h1>
-            {success && <p style={{ color: 'green' }}>Donation created successfully!</p>}
-            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-            <form onSubmit={handleSubmit}>
+            {success && <p className="success-message">Donation created successfully!</p>}
+            {error && <p className="error-message">Error: {error}</p>}
+            <form className="create-donation-form" onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="donorId">Donor ID:</label>
                     <input
