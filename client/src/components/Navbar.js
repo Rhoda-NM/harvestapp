@@ -109,24 +109,25 @@ function Navbar() {
         <Logo>HarvestShare</Logo>
         <NavLinks>
         <li>
-        <Link to="/">Home</Link>
+          <Link to="/"><NavLink href='#'>Home</NavLink></Link>
           </li>
           <li>
-            <NavLink href="#features">About Us</NavLink>
+            <NavLink href="#about">About Us</NavLink>
           </li>
           <li>
-            <NavLink href="#about">Our Work</NavLink>
+            <NavLink href="#features">Features</NavLink>
           </li>
-          <li>
-            <NavLink href="#contact">Get Involved</NavLink>
-          </li>
+          
           <li>
             <NavLink href="#contact">Our Impact</NavLink>
           </li>
           
-          
         </NavLinks>
         <ButtonContainer>
+          {isLoggedIn ? (
+            <Button onClick={handleLogout}>Logout</Button>
+          ): (
+            <>
             <DropdownContainer>
                 <DropdownButton onClick={toggleDropDown}>Register</DropdownButton>
                 <DropdownContent isOpen={isDropdownOpen}>
@@ -134,10 +135,8 @@ function Navbar() {
                 <DropdownItem to="/bank/register">As Food Bank</DropdownItem>
                 </DropdownContent>
             </DropdownContainer>
-          {isLoggedIn ? (
-            <Button onClick={handleLogout}>Logout</Button>
-          ): (
             <Link to="/login"><Button>Login</Button></Link>
+            </>
           )}
           
         </ButtonContainer>
