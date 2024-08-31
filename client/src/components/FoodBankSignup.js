@@ -1,9 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import Footer from './Footer';
+import Navbar from './Navbar';
 
 const FoodBankForm = () => {
+    const navigate = useNavigate();
   const initialValues = {
     username: '',
     email: '',
@@ -39,6 +43,7 @@ const FoodBankForm = () => {
       if (response.ok) {
         setStatus({ success: 'Food bank created successfully!' });
         resetForm();
+        navigate('./login')
       } else {
         const errorResult = await response.json();
         setStatus({ error: errorResult.message || 'An error occurred' });
@@ -52,6 +57,8 @@ const FoodBankForm = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <FoodBankFormContainer>
       <FormTitle>Create a Food Bank</FormTitle>
       <Formik
@@ -113,6 +120,8 @@ const FoodBankForm = () => {
         )}
       </Formik>
     </FoodBankFormContainer>
+    <Footer />
+    </>
   );
 };
 
