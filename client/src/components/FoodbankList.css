@@ -1,0 +1,39 @@
+/* FoodBanksList.css */
+.foodbank-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .foodbank-cards {
+    display: flex;
+    overflow: hidden;
+    width: 80%;
+  }
+  
+  .foodbank-card {
+    flex: 0 0 25%;
+    box-sizing: border-box;
+    margin: 10px;
+  }
+  
+  .arrow-button {
+    background-color: #f0f0f0;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+  }
+  
+  .arrow-button:disabled {
+    cursor: not-allowed;
+    color: #ccc;
+  }
+  
+  .search {
+    width: 50%;
+    padding: 8px;
+    flex: content;
+    margin-bottom: 16px;
+  }
+  

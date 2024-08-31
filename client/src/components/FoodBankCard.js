@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./FoodBankCard.css";
+import "./FoodBank.css";
 
 function FoodBankCard({ name, image, description, email, location }) {
   if (!name || !image || !description || !email || !location) {
