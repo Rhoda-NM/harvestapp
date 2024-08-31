@@ -61,6 +61,7 @@ const Button = styled.button`
 
 function Navbar() {
   const { logout, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout(); // Call the logout function from your AuthContext
