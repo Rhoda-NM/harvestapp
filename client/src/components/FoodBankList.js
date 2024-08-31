@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FoodBankCard from "./FoodBankCard";
+import "./FoodBankCard.css";
 
 function FoodBanksList() {
   const [foodbanks, setFoodbanks] = useState([]);

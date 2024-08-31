@@ -3,6 +3,8 @@ import DonorCard from "./DonorCard";
 
 function Donors() {
   const [donors, setDonors] = useState([]);
+  const [filteredDonors, setFilteredDonors] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchDonors = async () => {
@@ -19,16 +21,41 @@ function Donors() {
     fetchDonors();
   }, []);
 
+  useEffect(() => {
+    const filtered = donors.filter((donor) =>
+      donor.location.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredDonors(filtered);
+  }, [search, donors]);
+
   return (
-    <div>
-      {donors.map((donor) => (
-        <DonorCard
-          key={donor.id}
-          name={donor.name}
-          email={donor.email}
-          location={donor.location}
-        />
-      ))}
+    <div className="donors">
+      <input
+        type="text"
+        className="search"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search by location"
+      />
+      {filteredDonors.length > 0
+        ? filteredDonors.map((donor) => (
+            <DonorCard
+              key={donor.id}
+              name={donor.name}
+              email={donor.email}
+              location={donor.location}
+            />
+          ))
+        : donors.map((donor) => (
+            <DonorCard
+              key={donor.id}
+              name={donor.name}
+              email={donor.email}
+              location={donor.location}
+            />
+          )
+          )}
+          
     </div>
   );
 }
