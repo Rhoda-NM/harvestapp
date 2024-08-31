@@ -29,6 +29,7 @@ function Donors() {
   }, [search, donors]);
 
   return (
+    
     <div className="donors">
       <input
         type="text"
@@ -37,6 +38,7 @@ function Donors() {
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search by location"
       />
+      <div className="donors-container">
       {filteredDonors.length > 0
         ? filteredDonors.map((donor) => (
             <DonorCard
@@ -55,7 +57,7 @@ function Donors() {
             />
           )
           )}
-          
+    </div>  
     </div>
   );
 }
