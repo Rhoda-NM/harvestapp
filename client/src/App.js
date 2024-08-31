@@ -17,7 +17,7 @@ function App() {
           <Route exact path="/login" element={<LoginForm />} />
           <Route exact path="/donor/register" element={<DonorForm />} />
           <Route exact path="/bank/register" element={<FoodBankForm />} />
-          <Route exact path="/donordashboard" element={<DonorDashboard />} />
+          <Route exact path="/donor-dashboard" element={<DonorDashboard />} />
           <Route exact path="/newdonation" element={<NewDonationForm />} />
         </Routes>
       </div>
