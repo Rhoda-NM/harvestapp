@@ -108,6 +108,9 @@ function Navbar() {
       <NavbarContainer>
         <Logo>HarvestShare</Logo>
         <NavLinks>
+        <li>
+        <Link to="/">Home</Link>
+          </li>
           <li>
             <NavLink href="#features">About Us</NavLink>
           </li>
