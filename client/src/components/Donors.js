@@ -20,18 +20,17 @@ function Donors() {
   }, []);
 
   return (
-  <div>
-    
-    {donors.map((donor) => (
-        <DonorCard 
-        key={donor.id}
-        name={donor.name}
-        email={donor.email}
-        location={donor.location}
-    />  
-    ))}
-  </div>
-)
+    <div>
+      {donors.map((donor) => (
+        <DonorCard
+          key={donor.id}
+          name={donor.name}
+          email={donor.email}
+          location={donor.location}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default Donors;
