@@ -121,24 +121,13 @@ function Navbar() {
           <li>
             <NavLink href="#contact">Our Impact</NavLink>
           </li>
-          {isLoggedIn ? (
-            <>
-              <li>
-                <button onClick={handleLogout} className="logout-btn">
-                  Logout
-                </button>{" "}
-                {/* Functional logout button */}
-              </li>
-            </>
-          ) : (
-            <li>
-              <Link to="/signin">Sign In</Link>
-              <Link to="/foodbanklist">Foodbank List</Link>
-              <Link to="/foodbankdashboard">Foodbank Dashboard</Link>
-            </li>
-          )}
+          
         </NavLinks>
         <ButtonContainer>
+          {isLoggedIn ? (
+            <Button onClick={handleLogout}>Logout</Button>
+          ): (
+            <>
             <DropdownContainer>
                 <DropdownButton onClick={toggleDropDown}>Register</DropdownButton>
                 <DropdownContent isOpen={isDropdownOpen}>
@@ -146,10 +135,8 @@ function Navbar() {
                 <DropdownItem to="/bank/register">As Food Bank</DropdownItem>
                 </DropdownContent>
             </DropdownContainer>
-          {isLoggedIn ? (
-            <Button onClick={handleLogout}>Logout</Button>
-          ): (
             <Link to="/login"><Button>Login</Button></Link>
+            </>
           )}
           
         </ButtonContainer>

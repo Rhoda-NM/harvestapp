@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useAuth } from './AuthContext';
 import styled from 'styled-components'
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -10,6 +11,7 @@ const LoginForm = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate(); // Hook for navigation
+  const { setIsLoggedIn } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -43,6 +45,7 @@ const LoginForm = () => {
         localStorage.setItem('role', role);
 
         setMessage('Login successful!');
+        setIsLoggedIn(true);
         setError(''); // Clear any previous errors
 
         // Redirect based on user role
@@ -50,7 +53,7 @@ const LoginForm = () => {
           case 'donor':
             navigate('/donor-dashboard');
             break;
-          case 'foodbank':
+          case 'foodBank':
             navigate('/foodbank-dashboard');
             break;
           default:
