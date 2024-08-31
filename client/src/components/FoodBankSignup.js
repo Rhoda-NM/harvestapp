@@ -23,7 +23,6 @@ const FoodBankForm = () => {
     email: Yup.string().email('Invalid email address').required('Email is required'),
     name: Yup.string().required('Food Bank Name is required'),
     description: Yup.string(),
-    image: Yup.string().url('Invalid URL format'),
     location: Yup.string().required('Location is required'),
     password: Yup.string()
       .required('Password is required')
@@ -43,7 +42,7 @@ const FoodBankForm = () => {
       if (response.ok) {
         setStatus({ success: 'Food bank created successfully!' });
         resetForm();
-        navigate('./login')
+        navigate('/login')
       } else {
         const errorResult = await response.json();
         setStatus({ error: errorResult.message || 'An error occurred' });

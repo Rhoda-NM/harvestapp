@@ -6,6 +6,7 @@ import LoginForm from "./components/Login";
 import DonorForm from "./components/DonorSignup";
 import FoodBankForm from "./components/FoodBankSignup";
 import DonorDashboard from "./pages/DonorDashboard";
+import NewDonationForm from "./components/NewDonation";
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
           <Route exact path="/login" element={<LoginForm />} />
           <Route exact path="/donor/register" element={<DonorForm />} />
           <Route exact path="/bank/register" element={<FoodBankForm />} />
-          <Route exact path="/donordashboard" element={<DonorDashboard />} />
+          <Route exact path="/donor-dashboard" element={<DonorDashboard />} />
+          <Route exact path="/newdonation" element={<NewDonationForm />} />
         </Routes>
       </div>
     </Router>
