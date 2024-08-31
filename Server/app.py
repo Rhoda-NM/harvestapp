@@ -167,78 +167,56 @@ class DonorResource(Resource):
             return {'message': 'An error occurred while deleting the donor', 'error': str(e)}, 500
 
 class DonationsResource(Resource):
-    def get(self, donation_id=None, donor_id=None):
-        if donation_id:
-            # Fetch and return a single donation by ID
-            donation = Donation.query.get_or_404(donation_id)
-            return donation.to_dict(), 200
-        elif donor_id:
-            # Fetch and return donations by donor ID
-            donations = Donation.query.filter_by(donor_id=donor_id).all()
-            return {'donations': [d.to_dict() for d in donations]}, 200
-        else:
-            # Fetch and return all donations
-            donations = Donation.query.all()
-            return {'donations': [d.to_dict() for d in donations]}, 200  
+    def get(self, donation_id):
+        donation = Donation.query.get_or_404(donation_id)
+        return jsonify(donation)
 
     def post(self):
         data = request.get_json()
-        
-        # No need to get the JWT identity since it's removed
-        # current_user_id = get_jwt_identity()
-        current_user_id = data.get('donor_id')  # Example: if donor_id is provided in the request
+        date_str = data.get('date', '')
 
+        # Attempt to parse date with seconds
         try:
-            new_donation = Donation(
-                donor_id=current_user_id,
-                quantity=data['quantity'],
-                name=data['name'],
-                type=data.get('type'),
-                image=data.get('image')
-            )
-            db.session.add(new_donation)
-            db.session.commit()
-            return new_donation.to_dict(), 201
-        except IntegrityError:
-            db.session.rollback()
-            return {'message': 'Invalid data provided'}, 400
+            date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
+        except ValueError:
+            # If parsing fails, try without seconds
+            try:
+                date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M')
+            except ValueError:
+                # Handle the case where date format is incorrect
+                return {'error': 'Invalid date format'}, 400
 
-    def patch(self, donation_id):
+        new_donation = Donation(
+            donor_id=data['donor_id'],
+            foodBank_id=data['foodBank_id'],
+            quantity=data.get('quantity'),
+            date=date,
+            name=data['name'],
+            type=data.get('type'),
+            image=data.get('image')
+        )
+        db.session.add(new_donation)
+        db.session.commit()
+        return jsonify(new_donation), 201
+
+    def put(self, donation_id):
         donation = Donation.query.get_or_404(donation_id)
-        
-        # No need to get the JWT identity since it's removed
-        # current_user_id = get_jwt_identity()
-        current_user_id = donation.donor_id  # Assuming you want to allow any user to update
-
-        if donation.donor_id != current_user_id:
-            return {'message': 'Unauthorized'}, 403
-
         data = request.get_json()
-        
-        for key, value in data.items():
-            setattr(donation, key, value)
-
-        try:
-            db.session.commit()
-            return donation.to_dict(), 200
-        except IntegrityError:
-            db.session.rollback()
-            return {'message': 'Invalid data provided'}, 400
+        donation.donor_id = data.get('donor_id', donation.donor_id)
+        donation.foodBank_id = data.get('foodBank_id', donation.foodBank_id)
+        donation.quantity = data.get('quantity', donation.quantity)
+        donation.date = datetime.strptime(data.get('date', donation.date.strftime('%Y-%m-%dT%H:%M:%S')), '%Y-%m-%dT%H:%M:%S')
+        donation.name = data.get('name', donation.name)
+        donation.type = data.get('type', donation.type)
+        donation.image = data.get('image', donation.image)
+        db.session.commit()
+        return jsonify(donation)
 
     def delete(self, donation_id):
         donation = Donation.query.get_or_404(donation_id)
-        
-        # No need to get the JWT identity since it's removed
-        # current_user_id = get_jwt_identity()
-        current_user_id = donation.donor_id  # Assuming you want to allow any user to delete
-
-        if donation.donor_id != current_user_id:
-            return {'message': 'Unauthorized'}, 403
-
         db.session.delete(donation)
         db.session.commit()
         return '', 204
-
         
 class FoodBankResource(Resource):
     def __init__(self):

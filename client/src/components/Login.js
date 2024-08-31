@@ -38,11 +38,12 @@ const LoginForm = () => {
 
       if (response.ok) {
         const result = await response.json();
-        const { token, role } = result; // Assuming response contains role and token
+        const { token, role,id } = result; // Assuming response contains role and token
 
         // Save the token and role in localStorage
         localStorage.setItem('token', token);
         localStorage.setItem('role', role);
+        localStorage.setItem('userId', id)
 
         setMessage('Login successful!');
         setIsLoggedIn(true);
