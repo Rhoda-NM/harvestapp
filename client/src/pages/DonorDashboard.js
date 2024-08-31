@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import "./DonorDashboard.css";
 import NewDonationForm from "../components/NewDonation";
 import { useNavigate } from "react-router-dom";
-
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const Dashboard = ({ userId }) => {
   const [donations, setDonations] = useState([]);
@@ -42,6 +43,7 @@ const Dashboard = ({ userId }) => {
 
   return (
     <div>
+      <Navbar />
       <h1>Dashboard</h1>
       <div>
       <button onClick={handlePostDonation}>
@@ -70,7 +72,7 @@ const Dashboard = ({ userId }) => {
           ))}
         </ul>
       </div>
-      <Link to="/profile">Go to Profile</Link>
+      <Footer />
     </div>
   );
 };
