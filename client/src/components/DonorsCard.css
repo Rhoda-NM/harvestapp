@@ -1,0 +1,30 @@
+.donor-card {
+  display: inline-flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  width: 20vw;
+  margin: 16px auto;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.donors-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.donors input {
+  width: 60%;
+  height: 50px;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+.donor-card button {
+  background-color: #4caf50;
+}

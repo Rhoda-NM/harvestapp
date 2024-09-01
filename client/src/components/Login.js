@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import './LoginForm.css';
+import { useAuth } from './AuthContext';
+import styled from 'styled-components'
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -8,6 +11,7 @@ const LoginForm = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate(); // Hook for navigation
+  const { setIsLoggedIn } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -34,13 +38,15 @@ const LoginForm = () => {
 
       if (response.ok) {
         const result = await response.json();
-        const { token, role } = result; // Assuming response contains role and token
+        const { token, role,id } = result; // Assuming response contains role and token
 
         // Save the token and role in localStorage
         localStorage.setItem('token', token);
         localStorage.setItem('role', role);
+        localStorage.setItem('userId', id)
 
         setMessage('Login successful!');
+        setIsLoggedIn(true);
         setError(''); // Clear any previous errors
 
         // Redirect based on user role
@@ -48,7 +54,7 @@ const LoginForm = () => {
           case 'donor':
             navigate('/donor-dashboard');
             break;
-          case 'foodbank':
+          case 'foodBank':
             navigate('/foodbank-dashboard');
             break;
           default:
@@ -65,38 +71,105 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="login-form-container">
-      <h2>Login</h2>
+    <>
+    <Navbar />
+    <LoginFormContainer>
+      <FormTitle>Login</FormTitle>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username:</label>
-          <input
+        <FormGroup>
+          <Label htmlFor="username">Username:</Label>
+          <Input
             type="text"
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-        </div>
+        </FormGroup>
 
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
+        <FormGroup>
+          <Label htmlFor="password">Password:</Label>
+          <Input
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
+        </FormGroup>
 
-        <button type="submit">Login</button>
+        <Button type="submit">Login</Button>
       </form>
 
-      {message && <p className="success-message">{message}</p>}
-      {error && <p className="error-message">{error}</p>}
-    </div>
+      {message && <SuccessMessage>{message}</SuccessMessage>}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+    </LoginFormContainer>
+    <Footer />
+    </>
   );
 };
+
+const LoginFormContainer = styled.div`
+  max-width: 650px;
+  min-height: 400px;
+  margin: 80px auto 100px auto;
+  padding: 20px;
+  background-color: #FFF8E1; /* Soft Cream */
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const FormTitle = styled.h2`
+  text-align: center;
+  color: #2E7D32; /* Deep Forest Green */
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 15px;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #424242; /* Charcoal Gray */
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50; /* Primary Green */
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #388E3C; /* Darker shade of green */
+  }
+`;
+
+const SuccessMessage = styled.p`
+  color: #4CAF50; /* Primary Green */
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15px;
+`;
+
+const ErrorMessage = styled.p`
+  color: #FF9800; /* Earthy Orange */
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15px;
+`;
 
 export default LoginForm;

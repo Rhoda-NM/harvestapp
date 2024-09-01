@@ -6,6 +6,8 @@ import NewDonationForm from "../components/NewDonation";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import FoodBanksList from "../components/FoodBankList";
+import Donations from "../components/Donations";
 
 const Dashboard = ({ userId }) => {
   const [donations, setDonations] = useState([]);
@@ -53,23 +55,12 @@ const Dashboard = ({ userId }) => {
     </div>
       <div>
         <h2>My Donations</h2>
-        <ul>
-          {donations.map((donation) => (
-            <li key={donation.id}>
-              {donation.donation}
-              <button onClick={() => handleDeleteDonation(donation.id)}>
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
+        <Donations/>
       </div>
       <div>
         <h2>Available Food Banks</h2>
         <ul>
-          {foodBanks.map((foodBank) => (
-            <li key={foodBank.id}>{foodBank.name}</li>
-          ))}
+          <FoodBanksList/>
         </ul>
       </div>
       <Footer />

@@ -166,78 +166,98 @@ class DonorResource(Resource):
             db.session.rollback()
             return {'message': 'An error occurred while deleting the donor', 'error': str(e)}, 500
 
+from flask import request, jsonify
+from flask_restful import Resource
+from sqlalchemy.exc import IntegrityError
+
+from flask import request, jsonify
+from flask_restful import Resource
+from sqlalchemy.exc import IntegrityError
+
 class DonationsResource(Resource):
-    def get(self, donation_id=None, donor_id=None):
+    def get(self, donation_id=None):
+        """
+        Retrieve one or all donations.
+        
+        :param donation_id: Optional ID of a specific donation to retrieve
+        :return: JSON response containing donation(s) information
+        """
         if donation_id:
-            # Fetch and return a single donation by ID
-            donation = Donation.query.get_or_404(donation_id)
-            return donation.to_dict(), 200
-        elif donor_id:
-            # Fetch and return donations by donor ID
-            donations = Donation.query.filter_by(donor_id=donor_id).all()
-            return {'donations': [d.to_dict() for d in donations]}, 200
+            donation = Donation.query.get(donation_id)
+            if donation:
+                return jsonify(donation.to_dict())
+            else:
+                return {"error": f"Donation with ID {donation_id} not found"}, 404
         else:
-            # Fetch and return all donations
             donations = Donation.query.all()
-            return {'donations': [d.to_dict() for d in donations]}, 200  
+            return jsonify([d.to_dict() for d in donations])
 
     def post(self):
-        data = request.get_json()
+        """
+        Create a new donation.
         
-        # No need to get the JWT identity since it's removed
-        # current_user_id = get_jwt_identity()
-        current_user_id = data.get('donor_id')  # Example: if donor_id is provided in the request
-
+        :return: JSON response with the newly created donation's ID
+        """
+        data = request.json
         try:
-            new_donation = Donation(
-                donor_id=current_user_id,
-                quantity=data['quantity'],
+            donation = Donation(
+                quantity=data.get('quantity'),
                 name=data['name'],
                 type=data.get('type'),
                 image=data.get('image')
             )
-            db.session.add(new_donation)
+            db.session.add(donation)
             db.session.commit()
-            return new_donation.to_dict(), 201
+            return {"id": donation.id}, 201
+        except KeyError as e:
+            return {"error": f"Missing required field: {e}"}, 400
         except IntegrityError:
             db.session.rollback()
-            return {'message': 'Invalid data provided'}, 400
+            return {"error": "Integrity error occurred"}, 500
 
-    def patch(self, donation_id):
-        donation = Donation.query.get_or_404(donation_id)
+    def put(self, donation_id):
+        """
+        Update an existing donation.
         
-        # No need to get the JWT identity since it's removed
-        # current_user_id = get_jwt_identity()
-        current_user_id = donation.donor_id  # Assuming you want to allow any user to update
-
-        if donation.donor_id != current_user_id:
-            return {'message': 'Unauthorized'}, 403
-
-        data = request.get_json()
+        :param donation_id: ID of the donation to update
+        :return: JSON response indicating success or failure
+        """
+        donation = Donation.query.get(donation_id)
+        if not donation:
+            return {"error": f"Donation with ID {donation_id} not found"}, 404
         
-        for key, value in data.items():
-            setattr(donation, key, value)
-
+        data = request.json
+        donation.quantity = data.get('quantity', donation.quantity)
+        donation.name = data.get('name', donation.name)
+        donation.type = data.get('type', donation.type)
+        donation.image = data.get('image', donation.image)
+        
         try:
             db.session.commit()
-            return donation.to_dict(), 200
+            return jsonify({"message": "Donation updated successfully"})
         except IntegrityError:
             db.session.rollback()
-            return {'message': 'Invalid data provided'}, 400
+            return {"error": "Integrity error occurred"}, 500
 
     def delete(self, donation_id):
-        donation = Donation.query.get_or_404(donation_id)
+        """
+        Delete a donation.
         
-        # No need to get the JWT identity since it's removed
-        # current_user_id = get_jwt_identity()
-        current_user_id = donation.donor_id  # Assuming you want to allow any user to delete
+        :param donation_id: ID of the donation to delete
+        :return: JSON response indicating success or failure
+        """
+        donation = Donation.query.get(donation_id)
+        if not donation:
+            return {"error": f"Donation with ID {donation_id} not found"}, 404
+        
+        try:
+            db.session.delete(donation)
+            db.session.commit()
+            return jsonify({"message": "Donation deleted successfully"})
+        except IntegrityError:
+            db.session.rollback()
+            return {"error": "Integrity error occurred"}, 500
 
-        if donation.donor_id != current_user_id:
-            return {'message': 'Unauthorized'}, 403
-
-        db.session.delete(donation)
-        db.session.commit()
-        return '', 204
 
         
 class FoodBankResource(Resource):
