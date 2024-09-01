@@ -15,66 +15,7 @@ import base64
 from config import app,db,api
 from models import db,Donor,FoodBank, Feedback, Message, Community, Donation
 
-socketio = SocketIO(app, cors_allowed_origins="*")
 
-@socketio.on('join')
-def on_join(data):
-    room = f"{data['donor_id']}-{data['food_bank_id']}"
-    join_room(room)
-    emit('status', {'msg': f"User {data['user_id']} has joined the room."}, room=room)
-
-@socketio.on('leave')
-def on_leave(data):
-    room = f"{data['donor_id']}-{data['food_bank_id']}"
-    leave_room(room)
-    emit('status', {'msg': f"User {data['user_id']} has left the room."}, room=room)
-
-@socketio.on('send_message')
-def handle_message(data):
-    room = f"{data['donor_id']}-{data['food_bank_id']}"
-    new_message = Message(
-        sender_id=data['sender_id'],
-        recipient_id=data['recipient_id'],
-        content=data['content']
-    )
-    db.session.add(new_message)
-    db.session.commit()
-    
-    # Serialize the message object manually
-    serialized_message = {
-        'id': new_message.id,
-        'sender_id': new_message.sender_id,
-        'recipient_id': new_message.recipient_id,
-        'content': new_message.content,
-        'timestamp': new_message.timestamp.isoformat()
-    }
-    
-    emit('new_message', serialized_message, room=room)
-
-@app.route('/messages/<int:donor_id>/<int:food_bank_id>', methods=['GET'])
-@jwt_required()
-def get_messages(donor_id, food_bank_id):
-    current_user = get_jwt_identity()
-    if current_user['id'] not in [donor_id, food_bank_id]:
-        return jsonify({'error': 'Unauthorized'}), 403
-
-    messages = Message.query.filter(
-        ((Message.sender_id == donor_id) & (Message.recipient_id == food_bank_id)) |
-        ((Message.sender_id == food_bank_id) & (Message.recipient_id == donor_id))
-    ).order_by(Message.timestamp).all()
-
-    # Serialize messages manually
-    serialized_messages = [
-        {
-            'id': msg.id,
-            'sender_id': msg.sender_id,
-            'recipient_id': msg.recipient_id,
-            'content': msg.content,
-            'timestamp': msg.timestamp.isoformat()
-        } for msg in messages
-    ]
-
-    return jsonify(serialized_messages)
 
 class Index(Resource):
     def get(self):
