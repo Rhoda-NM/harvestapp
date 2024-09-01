@@ -1,51 +1,32 @@
-.card {
-    width: 300px; /* Adjust width as needed */
-    height: auto; /* Allow height to adjust based on content */
-    padding: 10px; /* Add padding for content spacing */
-    margin: 10px; /* Add margin for spacing between cards */
-    border: 1px solid #ddd; /* Light border for visibility */
-    border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
-    background-color: #fff; /* Background color */
-    overflow: hidden; /* Ensure content doesn't overflow */
-  }
-  
-  .card img {
-    width: 100%; /* Make image fill the card width */
-    height: 100px; /* Fixed height for image */
-    object-fit: cover; /* Ensure image covers area without distortion */
-    border-radius: 5px 5px 0 0; /* Rounded top corners for image */
-  }
-  
-  .card-content {
-    padding: 5px; /* Reduce padding in content area */
-    text-align: center; /* Center align text */
-  }
-  
-  .card-content h3 {
-    font-size: 14px; /* Adjust font size for title */
-    margin: 5px 0; /* Margin for spacing */
-  }
-  
-  .card-content p {
-    font-size: 12px; /* Adjust font size for content */
-    margin: 5px 0; /* Margin for spacing */
-  }
+.donations-card {
+  display: inline-flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  width: 300px;
+  height: auto;
+  margin: 20px;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-  .card-buttons {
-    margin-top: auto; /* Push buttons to the bottom of the card */
-    display: flex;
-    gap: 10px; /* Space between buttons */
-  }
-  
-  .card-buttons button {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  
-  .card-buttons button:hover {
-    background-color: #f0f0f0; /* Light background on hover */
-  }
-  
+.donations-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.donations-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.donations-card p {
+    font-family: 'Roboto', sans-serif;
+   font-weight: bold;
+}
+

@@ -1,5 +1,5 @@
 import React from "react";
-import './Donationscard.css';
+import './DonationsCard.css';
 
 function DonationsCard({ id, name, quantity, type, image, onEdit, onDelete }) {
   if (!name || !quantity || !type || !image) {
