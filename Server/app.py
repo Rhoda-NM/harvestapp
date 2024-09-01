@@ -166,57 +166,99 @@ class DonorResource(Resource):
             db.session.rollback()
             return {'message': 'An error occurred while deleting the donor', 'error': str(e)}, 500
 
+from flask import request, jsonify
+from flask_restful import Resource
+from sqlalchemy.exc import IntegrityError
+
+from flask import request, jsonify
+from flask_restful import Resource
+from sqlalchemy.exc import IntegrityError
+
 class DonationsResource(Resource):
-    def get(self, donation_id):
-        donation = Donation.query.get_or_404(donation_id)
-        return jsonify(donation)
+    def get(self, donation_id=None):
+        """
+        Retrieve one or all donations.
+        
+        :param donation_id: Optional ID of a specific donation to retrieve
+        :return: JSON response containing donation(s) information
+        """
+        if donation_id:
+            donation = Donation.query.get(donation_id)
+            if donation:
+                return jsonify(donation.to_dict())
+            else:
+                return {"error": f"Donation with ID {donation_id} not found"}, 404
+        else:
+            donations = Donation.query.all()
+            return jsonify([d.to_dict() for d in donations])
 
     def post(self):
-        data = request.get_json()
-        date_str = data.get('date', '')
-
-        # Attempt to parse date with seconds
+        """
+        Create a new donation.
+        
+        :return: JSON response with the newly created donation's ID
+        """
+        data = request.json
         try:
-            date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
-        except ValueError:
-            # If parsing fails, try without seconds
-            try:
-                date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M')
-            except ValueError:
-                # Handle the case where date format is incorrect
-                return {'error': 'Invalid date format'}, 400
-
-        new_donation = Donation(
-            donor_id=data['donor_id'],
-            foodBank_id=data['foodBank_id'],
-            quantity=data.get('quantity'),
-            date=date,
-            name=data['name'],
-            type=data.get('type'),
-            image=data.get('image')
-        )
-        db.session.add(new_donation)
-        db.session.commit()
-        return jsonify(new_donation), 201
+            donation = Donation(
+                quantity=data.get('quantity'),
+                name=data['name'],
+                type=data.get('type'),
+                image=data.get('image')
+            )
+            db.session.add(donation)
+            db.session.commit()
+            return {"id": donation.id}, 201
+        except KeyError as e:
+            return {"error": f"Missing required field: {e}"}, 400
+        except IntegrityError:
+            db.session.rollback()
+            return {"error": "Integrity error occurred"}, 500
 
     def put(self, donation_id):
-        donation = Donation.query.get_or_404(donation_id)
-        data = request.get_json()
-        donation.donor_id = data.get('donor_id', donation.donor_id)
-        donation.foodBank_id = data.get('foodBank_id', donation.foodBank_id)
+        """
+        Update an existing donation.
+        
+        :param donation_id: ID of the donation to update
+        :return: JSON response indicating success or failure
+        """
+        donation = Donation.query.get(donation_id)
+        if not donation:
+            return {"error": f"Donation with ID {donation_id} not found"}, 404
+        
+        data = request.json
         donation.quantity = data.get('quantity', donation.quantity)
-        donation.date = datetime.strptime(data.get('date', donation.date.strftime('%Y-%m-%dT%H:%M:%S')), '%Y-%m-%dT%H:%M:%S')
         donation.name = data.get('name', donation.name)
         donation.type = data.get('type', donation.type)
         donation.image = data.get('image', donation.image)
-        db.session.commit()
-        return jsonify(donation)
+        
+        try:
+            db.session.commit()
+            return jsonify({"message": "Donation updated successfully"})
+        except IntegrityError:
+            db.session.rollback()
+            return {"error": "Integrity error occurred"}, 500
 
     def delete(self, donation_id):
-        donation = Donation.query.get_or_404(donation_id)
-        db.session.delete(donation)
-        db.session.commit()
-        return '', 204
+        """
+        Delete a donation.
+        
+        :param donation_id: ID of the donation to delete
+        :return: JSON response indicating success or failure
+        """
+        donation = Donation.query.get(donation_id)
+        if not donation:
+            return {"error": f"Donation with ID {donation_id} not found"}, 404
+        
+        try:
+            db.session.delete(donation)
+            db.session.commit()
+            return jsonify({"message": "Donation deleted successfully"})
+        except IntegrityError:
+            db.session.rollback()
+            return {"error": "Integrity error occurred"}, 500
+
+
         
 class FoodBankResource(Resource):
     def __init__(self):

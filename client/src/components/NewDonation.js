@@ -1,132 +1,120 @@
 import React, { useState } from 'react';
-import './NewDonationForm.css'; // Import the CSS file
+import axios from 'axios';
+import './NewDonationForm.css'
 
-const CreateDonation = () => {
-    const [donorId, setDonorId] = useState('');
-    const [foodBankId, setFoodBankId] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [date, setDate] = useState('');
-    const [name, setName] = useState('');
-    const [type, setType] = useState('');
-    const [image, setImage] = useState('');
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
+const CreateDonationForm = () => {
+  const [donationData, setDonationData] = useState({
+    quantity: '',
+    name: '',
+    type: '',
+    image: ''
+  });
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setDonationData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
 
-        const donation = {
-            donor_id: parseInt(donorId),
-            foodBank_id: parseInt(foodBankId),
-            quantity: parseFloat(quantity),
-            date,
-            name,
-            type,
-            image,
-        };
-
-        try {
-            const response = await fetch('/donations', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(donation),
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const result = await response.json();
-            console.log('Success:', result);
-            setSuccess(true);
-            setError(null); // Clear any previous errors
-        } catch (err) {
-            console.error('Error:', err);
-            setError(err.message);
-            setSuccess(false);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    
+    try {
+      const response = await axios.post('/donations', donationData);
+      
+      if (response.status === 201) {
+        setSuccessMessage(`Donation created successfully. ID: ${response.data.id}`);
+        setErrorMessage('');
+        setDonationData({
+          quantity: '',
+          name: '',
+          type: '',
+          image: ''
+        });
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          setErrorMessage(error.response.data.error);
+        } else if (error.response.status === 500) {
+          setErrorMessage('An unexpected error occurred. Please try again later.');
         }
-    };
+      } else {
+        setErrorMessage('Network error. Please check your connection and try again.');
+      }
+      setSuccessMessage('');
+    }
+  };
 
-    return (
-        <div className="create-donation-container">
-            <h1>Create a New Donation</h1>
-            {success && <p className="success-message">Donation created successfully!</p>}
-            {error && <p className="error-message">Error: {error}</p>}
-            <form className="create-donation-form" onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="donorId">Donor ID:</label>
-                    <input
-                        type="number"
-                        id="donorId"
-                        value={donorId}
-                        onChange={(e) => setDonorId(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="foodBankId">Food Bank ID:</label>
-                    <input
-                        type="number"
-                        id="foodBankId"
-                        value={foodBankId}
-                        onChange={(e) => setFoodBankId(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="quantity">Quantity:</label>
-                    <input
-                        type="number"
-                        id="quantity"
-                        value={quantity}
-                        onChange={(e) => setQuantity(e.target.value)}
-                        step="0.01"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="date">Date:</label>
-                    <input
-                        type="datetime-local"
-                        id="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="name">Name:</label>
-                    <input
-                        type="text"
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="type">Type:</label>
-                    <input
-                        type="text"
-                        id="type"
-                        value={type}
-                        onChange={(e) => setType(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="image">Image URL:</label>
-                    <input
-                        type="text"
-                        id="image"
-                        value={image}
-                        onChange={(e) => setImage(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Submit</button>
-            </form>
+  return (
+    <div className="donation-form-container">
+      <h2 className="donation-form-title">Create New Donation</h2>
+      <form onSubmit={handleSubmit} className="donation-form">
+        <div className="form-group">
+          <label htmlFor="quantity" className="form-label">Quantity:</label>
+          <input
+            type="number"
+            className="form-input"
+            id="quantity"
+            name="quantity"
+            value={donationData.quantity}
+            onChange={handleChange}
+            required
+          />
         </div>
-    );
+
+        <div className="form-group">
+          <label htmlFor="name" className="form-label">Name:</label>
+          <input
+            type="text"
+            className="form-input"
+            id="name"
+            name="name"
+            value={donationData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="type" className="form-label">Type:</label>
+          <input
+            type="text"
+            className="form-input"
+            id="type"
+            name="type"
+            value={donationData.type}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="image" className="form-label">Image URL:</label>
+          <input
+            type="url"
+            className="form-input"
+            id="image"
+            name="image"
+            value={donationData.image}
+            onChange={handleChange}
+          />
+        </div>
+
+        <button type="submit" className="submit-button">Create Donation</button>
+      </form>
+      
+      {successMessage && (
+        <div className="success-message">{successMessage}</div>
+      )}
+      {errorMessage && (
+        <div className="error-message-global">{errorMessage}</div>
+      )}
+    </div>
+  );
 };
 
-export default CreateDonation;
+export default CreateDonationForm;
