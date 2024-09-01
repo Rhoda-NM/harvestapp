@@ -1,68 +1,98 @@
-from app import app
-from models import db, Donor, FoodBank, Message, Donation, Feedback, Community
-from datetime import datetime, timedelta
-import random
+from datetime import datetime
+from faker import Faker
+from config import db, bcrypt, app  # Adjust the import based on your application structure
+from models import Donor, FoodBank, Donation, Message, Feedback, Community
 
-def seed_database():
-    with app.app_context():
-        print("Clearing existing data...")
-        db.drop_all()
-        db.create_all()
+fake = Faker()
 
-        print("Seeding donors...")
-        donors = [
-            Donor(username="john_doe", email="john@example.com", name="John Doe", location="New York", role="donor"),
-            Donor(username="jane_smith", email="jane@example.com", name="Jane Smith", location="Los Angeles", role="donor"),
-        ]
-        for donor in donors:
-            donor.password_hash = "password123"
-        db.session.add_all(donors)
+def hash_password(password):
+    return bcrypt.generate_password_hash(password.encode('utf-8')).decode('utf-8')
 
-        print("Seeding food banks...")
-        food_banks = [
-            FoodBank(username="nycfoodbank", email="info@nycfoodbank.org", name="NYC Food Bank", description="Serving NYC", location="New York", role="food_bank"),
-            FoodBank(username="lafoodbank", email="info@lafoodbank.org", name="LA Food Bank", description="Serving LA", location="Los Angeles", role="food_bank"),
-        ]
+def seed_data():
+    # Create some sample donors
+    donors = []
+    for _ in range(5):
+        password = fake.password()  # Generate a random password
+        donor = Donor(
+            username=fake.user_name(),
+            email=fake.email(),
+            name=fake.name(),
+            location=fake.city(),
+            _password_hash=hash_password(password)  # Hash the password
+        )
+        donors.append(donor)
+
+    # Create some sample food banks
+    food_banks = []
+    for _ in range(5):
+        password = fake.password()  # Generate a random password
+        food_bank = FoodBank(
+            username=fake.user_name(),
+            email=fake.email(),
+            name=fake.company(),
+            description=fake.text(),
+            location=fake.city(),
+            image=fake.image_url(),
+            _password_hash=hash_password(password)  # Hash the password
+        )
+        food_banks.append(food_bank)
+
+    # Create some sample donations
+    donations = []
+    for _ in range(5):
+        donation = Donation(
+            quantity=fake.random_number(digits=3),
+            date=fake.date_time_this_year(),
+            name=fake.word(),
+            type=fake.word(),
+            image=fake.image_url()
+        )
+        donations.append(donation)
+
+    # Create some sample messages
+    messages = []
+    for donor in donors:
         for food_bank in food_banks:
-            food_bank.password_hash = "password123"
-        db.session.add_all(food_banks)
+            message = Message(
+                sender=donor,
+                recipient=food_bank,
+                content=fake.sentence(),
+                timestamp=fake.date_time_this_year(),
+                read=fake.boolean()
+            )
+            messages.append(message)
 
-        print("Seeding messages...")
-        messages = [
-            Message(sender_id=1, recipient_id=1, content="Hello, I'd like to donate."),
-            Message(sender_id=2, recipient_id=2, content="When are you open?"),
-        ]
-        db.session.add_all(messages)
+    # Create some sample feedback
+    feedbacks = []
+    for donor in donors:
+        for food_bank in food_banks:
+            feedback = Feedback(
+                content=fake.text(),
+                donor=donor,
+                foodBank=food_bank,
+                timestamp=fake.date_time_this_year()
+            )
+            feedbacks.append(feedback)
 
-        print("Seeding donations...")
-        donations = [
-            Donation(quantity=10, name="Canned Soup", type="Non-perishable"),
-            Donation(quantity=5, name="Rice", type="Grains"),
-        ]
-        db.session.add_all(donations)
+    # Create some sample communities
+    communities = []
+    for _ in range(3):
+        community = Community(
+            name=fake.word(),
+            description=fake.text(),
+            members=fake.random_number(digits=3),
+            impact_stories=fake.text(),
+            events=fake.text(),
+            banner=fake.image_url(),
+            category=fake.word()
+        )
+        communities.append(community)
 
-        print("Seeding feedback...")
-        feedback = [
-            Feedback(content="Great experience!", donor_id=1, foodBank_id=1),
-            Feedback(content="Very helpful staff.", donor_id=2, foodBank_id=2),
-        ]
-        db.session.add_all(feedback)
+    # Add and commit to the database
+    with db.session.begin():
+        db.session.add_all(donors + food_banks + donations + messages + feedbacks + communities)
 
-        print("Seeding communities...")
-        communities = [
-            Community(name="NYC Food Helpers", description="Helping the hungry in NYC", members=100, 
-                      impact_stories="Fed 1000 families;;Organized 5 food drives", 
-                      events="Monthly meetup;;Annual fundraiser",
-                      banner="nyc_banner.jpg", category="Urban"),
-            Community(name="LA Food Warriors", description="Fighting hunger in LA", members=80, 
-                      impact_stories="Distributed 5000 meals;;Partnered with 10 local restaurants", 
-                      events="Weekly volunteer session;;Quarterly strategy meeting",
-                      banner="la_banner.jpg", category="Metropolitan"),
-        ]
-        db.session.add_all(communities)
-
-        db.session.commit()
-        print("Seeding completed successfully!")
-
-if __name__ == "__main__":
-    seed_database()
+if __name__ == '__main__':
+    app.app_context().push()  # Push app context to interact with the database
+    seed_data()
+    print("Database seeded successfully!")
