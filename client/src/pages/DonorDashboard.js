@@ -14,7 +14,6 @@ const Dashboard = ({ userId }) => {
   const [foodBanks, setFoodBanks] = useState([]);
 
   useEffect(() => {
-    // Fetch donations and available food banks
     const fetchData = async () => {
       try {
         const donationsResponse = await axios.get(`/donations/${userId}`);
@@ -35,6 +34,7 @@ const Dashboard = ({ userId }) => {
   const handlePostDonation = () => {
     setShowForm(!showForm); // Toggle the form visibility
   };
+
   const handleDeleteDonation = async (donationId) => {
     try {
       await axios.delete(`/donations/${donationId}`);
@@ -45,7 +45,7 @@ const Dashboard = ({ userId }) => {
   };
 
   return (
-    <div>
+    <div className="dashboard-container">
       <Navbar />
       <h1>Dashboard</h1>
       <div>
