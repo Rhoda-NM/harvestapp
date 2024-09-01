@@ -3,7 +3,7 @@ import axios from "axios";
 import "./DonorDashboard.css";
 import NewDonationForm from "../components/NewDonation";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Footer from "./../components/Footer";
 import FoodBanksList from "../components/FoodBankList";
 import Donations from "../components/Donations";
 
@@ -17,14 +17,13 @@ const Dashboard = ({ userId }) => {
     const fetchData = async () => {
       try {
         const donationsResponse = await axios.get(`/donations/${userId}`);
-        const foodBanksResponse = await axios.get("/foodBanks");
+        const foodBanksResponse = await axios.get("/foodbanks");
         setDonations(donationsResponse.data);
         setFoodBanks(foodBanksResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, [userId]);
 
@@ -49,12 +48,14 @@ const Dashboard = ({ userId }) => {
           <h2>Dashboard</h2>
           <button onClick={() => setActiveSection("donations")}>
             My Donations
-          </button><br/>
+          </button>
+          <br />
           <button onClick={() => setActiveSection("foodBanks")}>
             Available Food Banks
-          </button><br/>
+          </button>
+          <br />
           <button onClick={handlePostDonation}>
-            {showForm ? 'Hide Donation Form' : 'Post Donation'}
+            {showForm ? "Hide Donation Form" : "Post Donation"}
           </button>
           {/* Add more buttons or links as needed */}
         </aside>
@@ -62,13 +63,13 @@ const Dashboard = ({ userId }) => {
           {showForm && <NewDonationForm />}
           {activeSection === "donations" && (
             <div>
-              <h2>My Donations</h2>
+              <h2 className="navlinks">My Donations</h2>
               <Donations />
             </div>
           )}
           {activeSection === "foodBanks" && (
             <div>
-              <h2>Available Food Banks</h2>
+              <h2 className="navlinks">Available Food Banks</h2>
               <FoodBanksList />
             </div>
           )}
