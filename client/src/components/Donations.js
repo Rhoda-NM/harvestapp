@@ -25,6 +25,7 @@ function Donations() {
 
   return (
     <div>
+      <h1>Donor Donations</h1>
       {donations.map((donation) => (
         <DonationsCard
           key={donation.id}

@@ -1,0 +1,32 @@
+.donations-card {
+  display: inline-flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  width: 300px;
+  height: auto;
+  margin: 20px;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.donations-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.donations-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.donations-card p {
+    font-family: 'Roboto', sans-serif;
+   font-weight: bold;
+}
+

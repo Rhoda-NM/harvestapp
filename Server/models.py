@@ -36,7 +36,7 @@ class Donor(db.Model, SerializerMixin):
     location = db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(20), default='donor')
 
-    donations = db.relationship('Donation', back_populates='donor', lazy='dynamic', cascade='all, delete-orphan')
+    #donations = db.relationship('Donation', back_populates='donor', lazy='dynamic', cascade='all, delete-orphan')
     sent_messages = db.relationship('Message', foreign_keys=[Message.sender_id], back_populates='sender', order_by=Message.timestamp.desc())
     feedback = db.relationship('Feedback', back_populates='donor', cascade='all, delete-orphan')
 
@@ -84,7 +84,7 @@ class FoodBank(db.Model, SerializerMixin):
     location = db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(20), default='food_bank')
 
-    donations = db.relationship('Donation', back_populates='foodBank', lazy='dynamic', cascade='all, delete-orphan')
+    #donations = db.relationship('Donation', back_populates='foodBank', lazy='dynamic', cascade='all, delete-orphan')
     received_messages = db.relationship('Message', foreign_keys=[Message.recipient_id], back_populates='recipient', order_by=Message.timestamp.desc())
     feedback = db.relationship('Feedback', back_populates='foodBank', cascade='all, delete-orphan')
 
@@ -123,16 +123,11 @@ class Donation(db.Model, SerializerMixin):
     serialize_rules = ('-donor', '-foodBank')
 
     id = db.Column(db.Integer, primary_key=True)
-    donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)
-    foodBank_id = db.Column(db.Integer, db.ForeignKey('food_banks.id'), nullable=False)
     quantity = db.Column(db.Float, nullable=True)
     date = db.Column(db.DateTime, default=datetime.now)
     name = db.Column(db.String(128), nullable=False)
     type = db.Column(db.Text)
     image = db.Column(db.String(255))
-
-    donor = db.relationship('Donor', back_populates='donations')
-    foodBank = db.relationship('FoodBank', back_populates='donations')
 
     def __repr__(self):
         return f"<Donation {self.id}: {self.name}>"
