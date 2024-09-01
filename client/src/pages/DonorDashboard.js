@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import "./DonorDashboard.css";
 import NewDonationForm from "../components/NewDonation";
-import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "./../components/Footer";
 import FoodBanksList from "../components/FoodBankList";
@@ -12,6 +10,8 @@ import Donations from "../components/Donations";
 const Dashboard = ({ userId }) => {
   const [donations, setDonations] = useState([]);
   const [foodBanks, setFoodBanks] = useState([]);
+  const [activeSection, setActiveSection] = useState("donations"); // Default to 'donations'
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,10 +26,6 @@ const Dashboard = ({ userId }) => {
     };
     fetchData();
   }, [userId]);
-
-  
-
-  const [showForm, setShowForm] = useState(false);
 
   const handlePostDonation = () => {
     setShowForm(!showForm); // Toggle the form visibility
@@ -47,22 +43,37 @@ const Dashboard = ({ userId }) => {
   return (
     <div className="dashboard-container">
       <Navbar />
-      <h1>Dashboard</h1>
-      <div>
-        <button onClick={handlePostDonation}>
-          {showForm ? "Hide Donation Form" : "Post Donation"}
-        </button>
-        {showForm && <NewDonationForm />}
-      </div>
-      <div>
-        <h2>My Donations</h2>
-        <Donations />
-      </div>
-      <div>
-        <h2>Available Food Banks</h2>
-        <ul>
-          <FoodBanksList />
-        </ul>
+      <div className="dashboard-content">
+        <aside className="sidebar">
+          <h2>Dashboard</h2>
+          <button onClick={() => setActiveSection("donations")}>
+            My Donations
+          </button>
+          <br />
+          <button onClick={() => setActiveSection("foodBanks")}>
+            Available Food Banks
+          </button>
+          <br />
+          <button onClick={handlePostDonation}>
+            {showForm ? "Hide Donation Form" : "Post Donation"}
+          </button>
+          {/* Add more buttons or links as needed */}
+        </aside>
+        <main className="main-content">
+          {showForm && <NewDonationForm />}
+          {activeSection === "donations" && (
+            <div>
+              <h2 className="navlinks">My Donations</h2>
+              <Donations />
+            </div>
+          )}
+          {activeSection === "foodBanks" && (
+            <div>
+              <h2 className="navlinks">Available Food Banks</h2>
+              <FoodBanksList />
+            </div>
+          )}
+        </main>
       </div>
       <Footer />
     </div>
