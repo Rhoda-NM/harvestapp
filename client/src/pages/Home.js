@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import styled from 'styled-components';
+import Donors from '../components/Donors';
+import FoodBankList from './../components/FoodBankList';
 
 // Hero Section
 const HeroSection = styled.div`
@@ -127,50 +129,186 @@ const AboutText = styled.p`
 `;
 
 // Testimonials Section
+// Testimonials Section
 const TestimonialsSection = styled.section`
     padding: 50px 20px;
-    display: block;
-    background-color: #FFF8E1; /* Soft Cream */
+    background-color: #f9f9f9; /* Light Gray for contrast */
 `;
 
-const Testimonial = styled.div`
+const TestimonialContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+`;
+
+const TestimonialCard = styled.div`
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 600px;
     text-align: center;
-    margin-bottom: 40px;
+    position: relative;
+`;
+
+const AuthorImage = styled.img`
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    position: absolute;
+    top: -30px;
+    left: calc(50% - 30px);
+    border: 3px solid #fdac36; /* Match the CTA Button color */
 `;
 
 const TestimonialText = styled.p`
-    font-size: 16px;
+    font-size: 18px;
     font-style: italic;
     color: #424242;
-    margin-bottom: 10px;
+    margin: 20px 0 10px;
 `;
 
 const TestimonialAuthor = styled.p`
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     color: #2E7D32; /* Deep Forest Green */
+    margin: 0;
 `;
 
+function Testimonials() {
+    return (
+        <TestimonialsSection>
+            <SectionTitle>Testimonials</SectionTitle>
+            <TestimonialContainer>
+                <TestimonialCard>
+                    <AuthorImage src="https://via.placeholder.com/60" alt="Jane Doe" />
+                    <TestimonialText>
+                        "Harvest Share has made it so easy for our restaurant to donate surplus food. Knowing that our food is going to those in need, rather than the landfill, is incredibly rewarding."
+                    </TestimonialText>
+                    <TestimonialAuthor>- Jane Doe, Restaurant Owner</TestimonialAuthor>
+                </TestimonialCard>
+                <TestimonialCard>
+                    <AuthorImage src="https://via.placeholder.com/60" alt="John Smith" />
+                    <TestimonialText>
+                        "As a volunteer, I love being part of a community that’s making a real difference in the fight against hunger."
+                    </TestimonialText>
+                    <TestimonialAuthor>- John Smith, Volunteer</TestimonialAuthor>
+                </TestimonialCard>
+            </TestimonialContainer>
+        </TestimonialsSection>
+    );
+}
+
 // FAQ Section
-const FaqSection = styled.section`
+const FaqSectionContainer = styled.section`
     padding: 50px 20px;
-    background-color: #FFFFFF; /* Clean White */
+    background-color: #FFFFFF;
 `;
 
 const FaqItem = styled.div`
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
 `;
 
 const FaqQuestion = styled.h2`
     font-size: 18px;
     font-weight: bold;
-    color: #2E7D32; /* Deep Forest Green */
+    color: #2E7D32;
+    cursor: pointer;
+    margin: 0;
+
+    &:hover {
+        color: #f57c00;
+    }
 `;
 
 const FaqAnswer = styled.p`
     font-size: 16px;
     color: #424242;
+    margin: 10px 0 0;
+    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
 `;
+
+function FaqItemComponent({ question, answer }) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <FaqItem>
+            <FaqQuestion onClick={() => setIsOpen(!isOpen)}>
+                {question}
+            </FaqQuestion>
+            <FaqAnswer isOpen={isOpen}>{answer}</FaqAnswer>
+        </FaqItem>
+    );
+}
+
+function FaqSection() {
+    return (
+        <FaqSectionContainer>
+            <SectionTitle>Frequently Asked Questions</SectionTitle>
+            <FaqItemComponent
+                question="How do I become a donor?"
+                answer="You can register as a donor on our platform by clicking on the 'Register' button and choosing the donor option. After registering, you'll be able to list any surplus food you have available for donation."
+            />
+            <FaqItemComponent
+                question="How can I volunteer?"
+                answer="To become a volunteer, simply sign up on our platform and join our network of volunteers. You can then select available tasks such as food pickup and delivery to those in need."
+            />
+            <FaqItemComponent
+                question="Who can receive donations?"
+                answer="Our donations are available to registered food banks, shelters, and other community organizations that serve people in need."
+            />
+        </FaqSectionContainer>
+    );
+}
+
+// Available Donors Section
+const DonorsSection = styled.section`
+    padding: 50px 20px;
+    background-color: #FFFFFF;
+`;
+
+const DonorsSectionTitle = styled.h3`
+    font-size: 48px;
+    margin-bottom: 30px;
+    text-align: center;
+`;
+
+function AvailableDonors() {
+    return (
+        <DonorsSection>
+            <DonorsSectionTitle>Available Donors</DonorsSectionTitle>
+            <Donors />
+        </DonorsSection>
+    );
+}
+
+// Available Food Banks Section
+const FoodBanksSection = styled.section`
+    padding: 50px 20px;
+    background-color: #FFF8E1;
+`;
+
+const FoodBanksSectionTitle = styled.h3`
+    font-size: 48px;
+    margin-bottom: 30px;
+    text-align: center;
+`;
+
+function AvailableFoodBanks() {
+    return (
+        <FoodBanksSection>
+            <FoodBanksSectionTitle>Available Food Banks</FoodBanksSectionTitle>
+            <FoodBankList />
+        </FoodBanksSection>
+    );
+}
 
 function Home() {
     return (
@@ -232,44 +370,10 @@ function Home() {
                     HarvestShare is a community-driven platform dedicated to reducing food waste and fighting hunger. We connect food donors, volunteers, and recipients to ensure that surplus food reaches those who need it most. Our mission is to create a more sustainable and equitable food distribution system that benefits everyone.
                 </AboutText>
             </AboutSection>
-
-            <TestimonialsSection>
-                <SectionTitle>Testimonials</SectionTitle>
-                <Testimonial>
-                    <TestimonialText>
-                        "HarvestShare has made it so easy for us to donate our surplus produce. Knowing that our food is going to families in need gives us immense satisfaction."
-                    </TestimonialText>
-                    <TestimonialAuthor>- Local Farmer</TestimonialAuthor>
-                </Testimonial>
-                <Testimonial>
-                    <TestimonialText>
-                        "As a volunteer, I feel like I'm truly making a difference. HarvestShare's platform is easy to use, and I love being part of such a meaningful cause."
-                    </TestimonialText>
-                    <TestimonialAuthor>- Volunteer</TestimonialAuthor>
-                </Testimonial>
-            </TestimonialsSection>
-
-            <FaqSection>
-                <SectionTitle>Frequently Asked Questions</SectionTitle>
-                <FaqItem>
-                    <FaqQuestion>How do I become a donor?</FaqQuestion>
-                    <FaqAnswer>
-                        You can register as a donor on our platform by clicking on the "Register" button and choosing the donor option. After registering, you'll be able to list any surplus food you have available for donation.
-                    </FaqAnswer>
-                </FaqItem>
-                <FaqItem>
-                    <FaqQuestion>How can I volunteer?</FaqQuestion>
-                    <FaqAnswer>
-                        To become a volunteer, simply sign up on our platform and join our network of volunteers. You can then select available tasks such as food pickup and delivery to those in need.
-                    </FaqAnswer>
-                </FaqItem>
-                <FaqItem>
-                    <FaqQuestion>Who can receive donations?</FaqQuestion>
-                    <FaqAnswer>
-                        Our donations are available to registered food banks, shelters, and other community organizations that serve people in need.
-                    </FaqAnswer>
-                </FaqItem>
-            </FaqSection>
+            <AvailableDonors />
+            <AvailableFoodBanks />
+            <Testimonials />
+            <FaqSection />
 
             <Footer />
         </div>

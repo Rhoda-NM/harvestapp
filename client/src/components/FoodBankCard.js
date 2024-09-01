@@ -6,9 +6,9 @@ import foodbank from "../images/foodbank.jpeg";
 const default_image = foodbank;
 
 function FoodBankCard({ name, image, description, email, location }) {
-  /*  if (!name || !image || !description || !email || !location) {
+  /*if (!name || !image || !description || !email || !location) {
     return <div>Loading...</div>;
-  } */
+  }*/
 
   return (
     <div className="food-bank-contaner">
