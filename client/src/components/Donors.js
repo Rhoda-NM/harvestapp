@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DonorCard from "./DonorCard";
+import DonationsList from "./DonationList";
 
 function Donors({ limit }) {
   const [donors, setDonors] = useState([]);

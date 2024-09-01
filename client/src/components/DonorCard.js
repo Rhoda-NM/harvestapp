@@ -10,7 +10,7 @@ function DonorCard({ id, email, name, location }) {
   }
 
   function handleClick() {
-    navigate("/donations");
+    navigate("/donationList");
   }
 
   return (

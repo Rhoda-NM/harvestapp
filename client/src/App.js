@@ -11,6 +11,8 @@ import NewDonationForm from "./components/NewDonation";
 import FoodBanksList from "./components/FoodBankList";
 import Donations from "./components/Donations";
 import Dashboard from "./pages/DonorDashboard.js";
+import ImpactPage from "./pages/Impact.js";
+import DonationsList from "./components/DonationList.js";
 
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
       <div className="App">
         <Routes>
           <Route exact path="/" element={<Home />} />
+          <Route exact path="/impact" element={<ImpactPage />} />
+          <Route exact path="/donationList" element={<DonationsList />} />
           <Route exact path="/login" element={<LoginForm />} />
           <Route exact path="/donor/register" element={<DonorForm />} />
           <Route exact path="/bank/register" element={<FoodBankForm />} />

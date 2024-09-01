@@ -119,7 +119,7 @@ function Navbar() {
           </li>
           
           <li>
-            <NavLink href="#contact">Our Impact</NavLink>
+          <Link to="/impact"><NavLink href='#'>Our Impact</NavLink></Link>
           </li>
           
         </NavLinks>
