@@ -284,7 +284,7 @@ function AvailableDonors() {
     return (
         <DonorsSection>
             <DonorsSectionTitle>Available Donors</DonorsSectionTitle>
-            <Donors />
+            <Donors  limit={8} />
         </DonorsSection>
     );
 }
@@ -314,7 +314,7 @@ function Home() {
     return (
         <div>
             <Navbar />
-            <HeroSection>
+            <HeroSection id="home">
                 <ImgContainer>
                     <img
                         alt="hero"
@@ -346,7 +346,7 @@ function Home() {
                 </Counter>
             </CountersSection>
 
-            <FeaturesSection>
+            <FeaturesSection id="features">
                 <SectionTitle>Our Features</SectionTitle>
                 <FeaturesGrid>
                     <FeatureCard>
@@ -364,7 +364,7 @@ function Home() {
                 </FeaturesGrid>
             </FeaturesSection>
 
-            <AboutSection>
+            <AboutSection id="about">
                 <SectionTitle>About Us</SectionTitle>
                 <AboutText>
                     HarvestShare is a community-driven platform dedicated to reducing food waste and fighting hunger. We connect food donors, volunteers, and recipients to ensure that surplus food reaches those who need it most. Our mission is to create a more sustainable and equitable food distribution system that benefits everyone.

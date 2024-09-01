@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DonorCard from "./DonorCard";
 
-function Donors() {
+function Donors({ limit }) {
   const [donors, setDonors] = useState([]);
   const [filteredDonors, setFilteredDonors] = useState([]);
   const [search, setSearch] = useState("");
@@ -11,7 +11,7 @@ function Donors() {
       try {
         const response = await fetch("http://127.0.0.1:5000/donors");
         const allDonors = await response.json();
-        setDonors(allDonors);
+        setDonors(limit ? allDonors.slice(0, limit) : allDonors);
       } catch (err) {
         console.log("Fetch foodbanks error: ", err);
       }

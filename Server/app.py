@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from requests.auth import HTTPBasicAuth
 import base64
+from verify import verify_foodbank_registration
+
 
 
 
@@ -274,6 +276,7 @@ class FoodBankResource(Resource):
         self.reqparse.add_argument('description', type=str)
         self.reqparse.add_argument('image', type=str)
         self.reqparse.add_argument('location', type=str, required=True, help='Location is required')
+        self.reqparse.add_argument('website', type=str, required=True, help='Website is required')
         super(FoodBankResource, self).__init__()
 
     def get(self, foodbank_id=None):
@@ -286,7 +289,8 @@ class FoodBankResource(Resource):
 
     def post(self):
         args = self.reqparse.parse_args()
-        
+
+        # Check if username, email, or name already exists
         if FoodBank.query.filter_by(username=args['username']).first():
             return {'message': 'Username already exists'}, 400
         if FoodBank.query.filter_by(email=args['email']).first():
@@ -294,6 +298,26 @@ class FoodBankResource(Resource):
         if FoodBank.query.filter_by(name=args['name']).first():
             return {'message': 'Food bank name already exists'}, 400
 
+        # Perform registration verification
+        verification_result = verify_foodbank_registration({
+            "address": args['location'],
+            "website": args['website'],
+            "name": args['name']
+        })
+
+        if verification_result['status'] == "Rejected":
+            return {
+                'message': 'Registration rejected due to high risk factors.',
+                'risk_score': verification_result['risk_score']
+            }, 400
+
+        if verification_result['status'] == "Manual Review Required":
+            return {
+                'message': 'Registration requires manual review.',
+                'risk_score': verification_result['risk_score']
+            }, 400
+
+        # Create a new food bank if verification passed
         new_foodbank = FoodBank(
             username=args['username'],
             email=args['email'],
@@ -326,8 +350,6 @@ class FoodBankResource(Resource):
         except Exception as e:
             db.session.rollback()
             return {'message': 'An error occurred while deleting the food bank', 'error': str(e)}, 500
-
-
 
 class ConversationResource(Resource):
     @jwt_required()

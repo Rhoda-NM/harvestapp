@@ -19,6 +19,8 @@ flask-jwt-extended = "*"
 gunicorn = "*"
 "requests.auth" = "*"
 requests = "*"
+bs4 = "*"
+vadersentiment = "*"
 
 [dev-packages]
 
