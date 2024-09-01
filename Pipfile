@@ -21,6 +21,7 @@ gunicorn = "*"
 requests = "*"
 bs4 = "*"
 vadersentiment = "*"
+flask-socketio = "*"
 
 [dev-packages]
 
