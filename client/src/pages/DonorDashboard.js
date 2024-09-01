@@ -5,29 +5,30 @@ import "./DonorDashboard.css";
 import NewDonationForm from "../components/NewDonation";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Footer from "./../components/Footer";
 import FoodBanksList from "../components/FoodBankList";
 import Donations from "../components/Donations";
 
 const Dashboard = ({ userId }) => {
   const [donations, setDonations] = useState([]);
   const [foodBanks, setFoodBanks] = useState([]);
-  
+
   useEffect(() => {
     // Fetch donations and available food banks
     const fetchData = async () => {
       try {
         const donationsResponse = await axios.get(`/donations/${userId}`);
-        const foodBanksResponse = await axios.get("/foodBanks");
+        const foodBanksResponse = await axios.get("/foodbanks");
         setDonations(donationsResponse.data);
         setFoodBanks(foodBanksResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, [userId]);
+
+  
 
   const [showForm, setShowForm] = useState(false);
 
@@ -48,19 +49,19 @@ const Dashboard = ({ userId }) => {
       <Navbar />
       <h1>Dashboard</h1>
       <div>
-      <button onClick={handlePostDonation}>
-        {showForm ? 'Hide Donation Form' : 'Post Donation'}
-      </button>
-      {showForm && <NewDonationForm />}
-    </div>
+        <button onClick={handlePostDonation}>
+          {showForm ? "Hide Donation Form" : "Post Donation"}
+        </button>
+        {showForm && <NewDonationForm />}
+      </div>
       <div>
         <h2>My Donations</h2>
-        <Donations/>
+        <Donations />
       </div>
       <div>
         <h2>Available Food Banks</h2>
         <ul>
-          <FoodBanksList/>
+          <FoodBanksList />
         </ul>
       </div>
       <Footer />

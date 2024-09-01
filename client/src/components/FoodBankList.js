@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FoodBankCard from "./FoodBankCard";
-import './FoodbankList.css'; // Make sure to create this file for custom styles
+import "./FoodbankList.css"; 
 
 function FoodBanksList() {
   const [foodbanks, setFoodbanks] = useState([]);
@@ -30,11 +30,17 @@ function FoodBanksList() {
     setFilteredFoodbanks(filtered);
   }, [search, foodbanks]);
 
-  const itemsToDisplay = (filteredFoodbanks.length > 0 ? filteredFoodbanks : foodbanks)
-    .slice(currentIndex, currentIndex + itemsPerPage);
+  const itemsToDisplay = (
+    filteredFoodbanks.length > 0 ? filteredFoodbanks : foodbanks
+  ).slice(currentIndex, currentIndex + itemsPerPage);
 
   const nextPage = () => {
-    if (currentIndex + itemsPerPage < (filteredFoodbanks.length > 0 ? filteredFoodbanks.length : foodbanks.length)) {
+    if (
+      currentIndex + itemsPerPage <
+      (filteredFoodbanks.length > 0
+        ? filteredFoodbanks.length
+        : foodbanks.length)
+    ) {
       setCurrentIndex(currentIndex + itemsPerPage);
     }
   };
@@ -65,7 +71,7 @@ function FoodBanksList() {
         <div className="foodbank-cards">
           {itemsToDisplay.map((foodbank) => (
             <FoodBankCard
-              key={foodbank._id}
+              key={foodbank._id || foodbank.id}
               name={foodbank.name}
               image={foodbank.image}
               description={foodbank.description}
@@ -77,7 +83,12 @@ function FoodBanksList() {
         <button
           className="arrow-button"
           onClick={nextPage}
-          disabled={currentIndex + itemsPerPage >= (filteredFoodbanks.length > 0 ? filteredFoodbanks.length : foodbanks.length)}
+          disabled={
+            currentIndex + itemsPerPage >=
+            (filteredFoodbanks.length > 0
+              ? filteredFoodbanks.length
+              : foodbanks.length)
+          }
         >
           &#8594;
         </button>
