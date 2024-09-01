@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import styled from 'styled-components';
-//import DonorList from '../components/DonorList';
-//import FoodBankList from '../components/FoodBankList';
+import Donors from './components/Donors';
+import FoodBankList from './../components/FoodBankList';
 
 // Hero Section
 const HeroSection = styled.div`
@@ -282,7 +282,7 @@ function AvailableDonors() {
     return (
         <DonorsSection>
             <DonorsSectionTitle>Available Donors</DonorsSectionTitle>
-            <DonorList />
+            <Donors />
         </DonorsSection>
     );
 }
