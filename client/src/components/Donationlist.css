@@ -1,32 +1,22 @@
-.card {
-  display: inline-flex;
-  flex-direction: column;
-  border: 1px solid #ddd;
-  width: 300px;
-  height: auto;
-  margin: 20px;
-  border-radius: 8px;
-  padding: 16px;
-  text-align: center;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.card img {
-  width: 100%;.card {
+.donations {
+    padding: 20px;
+  }
+  
+  .donations-container {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent cards from wrapping to the next line */
+    overflow-x: auto; /* Allow horizontal scrolling */
+    gap: 16px; /* Space between cards */
+  }
+  
+  .card {
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 16px;
-    max-width: 300px;
-    margin: 16px auto;
+    max-width: 250px; /* Adjust the card width as needed */
     background-color: #fff;
+    flex: 0 0 auto; /* Prevent cards from shrinking or growing */
   }
   
   .card img {
@@ -61,25 +51,15 @@
     transition: background-color 0.3s;
   }
   
-  .card-buttons:hover {
+  .card-buttons button:hover {
     background-color: #0056b3;
   }
   
-  .card-buttons.delete {
+  .card-buttons button.delete {
     background-color: #dc3545;
   }
   
-  .card-buttons.delete:hover {
+  .card-buttons button.delete:hover {
     background-color: #c82333;
   }
   
-  height: 200px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.card p {
-    font-family: 'Roboto', sans-serif;
-   font-weight: bold;
-}
-

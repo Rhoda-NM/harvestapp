@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+
 
 const ImpactPageContainer = styled.div`
   padding: 50px;
@@ -88,6 +91,8 @@ const TestimonialAuthor = styled.p`
 
 const ImpactPage = () => {
   return (
+    <>
+    <Navbar />
     <ImpactPageContainer>
       <Section>
         <SectionTitle>Impact of HarvestShare</SectionTitle>
@@ -159,6 +164,8 @@ const ImpactPage = () => {
         </Paragraph>
       </Section>
     </ImpactPageContainer>
+    <Footer/>
+    </>
   );
 };
 
