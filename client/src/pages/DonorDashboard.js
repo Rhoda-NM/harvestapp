@@ -3,7 +3,7 @@ import axios from "axios";
 import "./DonorDashboard.css";
 import NewDonationForm from "../components/NewDonation";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Footer from "./../components/Footer";
 import FoodBanksList from "../components/FoodBankList";
 import Donations from "../components/Donations";
 import ConversationView from "../components/ConversationView";
@@ -16,24 +16,7 @@ const Dashboard = ({ userId }) => {
   const [selectedFoodBank, setSelectedFoodBank] = useState(null);
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const donationsResponse = await axios.get(`/donations/${userId}`);
-        const foodBanksResponse = await axios.get("/foodBanks");
-        const messagesResponse = await axios.get(`/messages/${userId}`);
-        
-        setDonations(donationsResponse.data);
-        setFoodBanks(foodBanksResponse.data);
-        setMessages(messagesResponse.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [userId]);
-
+  
   const handlePostDonation = () => {
     setShowForm(!showForm);
   };
@@ -48,8 +31,11 @@ const Dashboard = ({ userId }) => {
   };
 
   const handleFoodBankSelect = (foodBank) => {
+    console.log("before selectedFoodBank" + foodBank);
     setSelectedFoodBank(foodBank);
     setActiveSection("conversation");
+    console.log("selectedFoodBank" + foodBank);
+    
   };
 
   return (
@@ -60,12 +46,14 @@ const Dashboard = ({ userId }) => {
           <h2>Dashboard</h2>
           <button onClick={() => setActiveSection("donations")}>
             My Donations
-          </button><br/>
+          </button>
+          <br />
           <button onClick={() => setActiveSection("foodBanks")}>
             Available Food Banks
-          </button><br/>
+          </button>
+          <br />
           <button onClick={handlePostDonation}>
-            {showForm ? 'Hide Donation Form' : 'Post Donation'}
+            {showForm ? "Hide Donation Form" : "Post Donation"}
           </button>
           {selectedFoodBank && (
             <button onClick={() => setActiveSection("conversation")}>
@@ -79,6 +67,8 @@ const Dashboard = ({ userId }) => {
             <div>
               <h2>My Donations</h2>
               <Donations donations={donations} onDelete={handleDeleteDonation} />
+              <h2 className="navlinks">My Donations</h2>
+              <Donations />
             </div>
           )}
           {activeSection === "foodBanks" && (
@@ -87,6 +77,7 @@ const Dashboard = ({ userId }) => {
               <FoodBanksList foodBanks={foodBanks} onSelect={handleFoodBankSelect} />
             </div>
           )}
+          
           {activeSection === "conversation" && selectedFoodBank && (
             <div>
               <h2>Conversation with {selectedFoodBank.name}</h2>
@@ -95,6 +86,8 @@ const Dashboard = ({ userId }) => {
                 foodBankId={selectedFoodBank.id}
                 messages={messages}
               />
+              <h2 className="navlinks">Available Food Banks</h2>
+              <FoodBanksList />
             </div>
           )}
         </main>

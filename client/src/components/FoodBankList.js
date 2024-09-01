@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FoodBankCard from "./FoodBankCard";
-import './FoodbankList.css'; // Make sure to create this file for custom styles
+import "./FoodbankList.css"; 
 
 function FoodBanksList({foodBank, onSelect}) {
   const [foodbanks, setFoodbanks] = useState([]);
@@ -14,6 +14,7 @@ function FoodBanksList({foodBank, onSelect}) {
       try {
         const response = await fetch("http://127.0.0.1:5000/foodbanks");
         const allFoodBanks = await response.json();
+        console.log("All foodbanks: ", allFoodBanks);
         setFoodbanks(allFoodBanks);
       } catch (err) {
         console.log("Fetch foodbanks error: ", err);
@@ -30,11 +31,17 @@ function FoodBanksList({foodBank, onSelect}) {
     setFilteredFoodbanks(filtered);
   }, [search, foodbanks]);
 
-  const itemsToDisplay = (filteredFoodbanks.length > 0 ? filteredFoodbanks : foodbanks)
-    .slice(currentIndex, currentIndex + itemsPerPage);
+  const itemsToDisplay = (
+    filteredFoodbanks.length > 0 ? filteredFoodbanks : foodbanks
+  ).slice(currentIndex, currentIndex + itemsPerPage);
 
   const nextPage = () => {
-    if (currentIndex + itemsPerPage < (filteredFoodbanks.length > 0 ? filteredFoodbanks.length : foodbanks.length)) {
+    if (
+      currentIndex + itemsPerPage <
+      (filteredFoodbanks.length > 0
+        ? filteredFoodbanks.length
+        : foodbanks.length)
+    ) {
       setCurrentIndex(currentIndex + itemsPerPage);
     }
   };
@@ -65,7 +72,7 @@ function FoodBanksList({foodBank, onSelect}) {
         <div className="foodbank-cards">
           {itemsToDisplay.map((foodbank) => (
             <FoodBankCard
-              key={foodbank._id}
+              key={foodbank._id || foodbank.id}
               name={foodbank.name}
               image={foodbank.image}
               description={foodbank.description}
@@ -78,7 +85,12 @@ function FoodBanksList({foodBank, onSelect}) {
         <button
           className="arrow-button"
           onClick={nextPage}
-          disabled={currentIndex + itemsPerPage >= (filteredFoodbanks.length > 0 ? filteredFoodbanks.length : foodbanks.length)}
+          disabled={
+            currentIndex + itemsPerPage >=
+            (filteredFoodbanks.length > 0
+              ? filteredFoodbanks.length
+              : foodbanks.length)
+          }
         >
           &#8594;
         </button>
