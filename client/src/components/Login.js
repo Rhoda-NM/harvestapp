@@ -49,6 +49,10 @@ const LoginForm = () => {
         setIsLoggedIn(true);
         setError(''); // Clear any previous errors
 
+        console.log("Response data:", response.data);
+        console.log("Extracted role:", role);
+        console.log("Extracted id:", id);
+
         // Redirect based on user role
         switch (role) {
           case 'donor':

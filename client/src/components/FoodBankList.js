@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import FoodBankCard from "./FoodBankCard";
 import './FoodbankList.css'; // Make sure to create this file for custom styles
 
-function FoodBanksList() {
+function FoodBanksList({foodBank, onSelect}) {
   const [foodbanks, setFoodbanks] = useState([]);
   const [filteredFoodbanks, setFilteredFoodbanks] = useState([]);
   const [search, setSearch] = useState("");
@@ -71,6 +71,7 @@ function FoodBanksList() {
               description={foodbank.description}
               email={foodbank.email}
               location={foodbank.location}
+              onClick={() => onSelect(foodBank)}
             />
           ))}
         </div>

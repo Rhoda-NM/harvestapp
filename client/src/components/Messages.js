@@ -14,7 +14,7 @@ const MessageForm = ({ recipientId, onMessageSent }) => {
         return;
       }
       try {
-        const response = await axios.post(`${API_URL}/conversation`, {
+        const response = await axios.post(`/start-conversation`, {
           recipient_id: recipientId,
           content: content
         }, {
