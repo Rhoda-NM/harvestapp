@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import styled from 'styled-components';
+//import DonorList from '../components/DonorList';
+//import FoodBankList from '../components/FoodBankList';
 
 // Hero Section
 const HeroSection = styled.div`
@@ -8,7 +10,7 @@ const HeroSection = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #fff; /* Primary Green */
+    background-color: #fff;
     color: #333;
 `;
 
@@ -24,20 +26,20 @@ const HeroContainer = styled.div`
 const HeroTitle = styled.h1`
     font-size: 48px;
     margin-bottom: 50px;
-    font-weight: 600;
+    font-weight: 600px;
     color: #fdac36;
 `;
 
 const HeroSubtitle = styled.p`
     font-size: 32px;
-    font-weight: 500;
+    font-weight: 500px;
     color: #000;
     margin-bottom: 30px;
 `;
 
 const CtaButton = styled.button`
     padding: 10px 20px;
-    background-color: #fdac36; /* Earthy Orange */
+    background-color: #fdac36;
     color: #FFFFFF;
     border: none;
     border-radius: 5px;
@@ -45,7 +47,7 @@ const CtaButton = styled.button`
     cursor: pointer;
 
     &:hover {
-        background-color: #f57c00; /* Slightly darker orange */
+        background-color: #f57c00;
     }
 `;
 
@@ -54,7 +56,7 @@ const CountersSection = styled.section`
     padding: 50px 20px;
     display: flex;
     justify-content: space-around;
-    background-color: #FFF8E1; /* Soft Cream */
+    background-color: #FFF8E1;
 `;
 
 const Counter = styled.div`
@@ -65,7 +67,7 @@ const Counter = styled.div`
 const CounterNumber = styled.h2`
     font-size: 48px;
     margin-bottom: 10px;
-    color: #2E7D32; /* Deep Forest Green */
+    color: #2E7D32;
 `;
 
 const CounterLabel = styled.p`
@@ -75,7 +77,7 @@ const CounterLabel = styled.p`
 // Features Section
 const FeaturesSection = styled.section`
     padding: 50px 20px;
-    background-color: #FFFFFF; /* Clean White */
+    background-color: #FFFFFF;
 `;
 
 const SectionTitle = styled.h3`
@@ -100,7 +102,7 @@ const FeatureText = styled.p`
 `;
 
 const FeatureCard = styled.div`
-    background-color: #FFF8E1; /* Soft Cream */
+    background-color: #FFF8E1;
     border-radius: 10px;
     padding: 40px;
     width: 400px;
@@ -114,7 +116,7 @@ const FeatureCard = styled.div`
 // About Us Section
 const AboutSection = styled.section`
     padding: 50px 20px;
-    background-color: #fff; /* Light Gray */
+    background-color: #fff;
     text-align: center;
 `;
 
@@ -203,7 +205,7 @@ function Testimonials() {
 // FAQ Section
 const FaqSectionContainer = styled.section`
     padding: 50px 20px;
-    background-color: #FFFFFF; /* Clean White */
+    background-color: #FFFFFF;
 `;
 
 const FaqItem = styled.div`
@@ -215,12 +217,12 @@ const FaqItem = styled.div`
 const FaqQuestion = styled.h2`
     font-size: 18px;
     font-weight: bold;
-    color: #2E7D32; /* Deep Forest Green */
+    color: #2E7D32;
     cursor: pointer;
     margin: 0;
 
     &:hover {
-        color: #f57c00; /* Slightly darker orange */
+        color: #f57c00;
     }
 `;
 
@@ -264,9 +266,51 @@ function FaqSection() {
     );
 }
 
+// Available Donors Section
+const DonorsSection = styled.section`
+    padding: 50px 20px;
+    background-color: #FFFFFF;
+`;
+
+const DonorsSectionTitle = styled.h3`
+    font-size: 48px;
+    margin-bottom: 30px;
+    text-align: center;
+`;
+
+function AvailableDonors() {
+    return (
+        <DonorsSection>
+            <DonorsSectionTitle>Available Donors</DonorsSectionTitle>
+            <DonorList />
+        </DonorsSection>
+    );
+}
+
+// Available Food Banks Section
+const FoodBanksSection = styled.section`
+    padding: 50px 20px;
+    background-color: #FFF8E1;
+`;
+
+const FoodBanksSectionTitle = styled.h3`
+    font-size: 48px;
+    margin-bottom: 30px;
+    text-align: center;
+`;
+
+function AvailableFoodBanks() {
+    return (
+        <FoodBanksSection>
+            <FoodBanksSectionTitle>Available Food Banks</FoodBanksSectionTitle>
+            <FoodBankList />
+        </FoodBanksSection>
+    );
+}
+
 // Footer Section
 const FooterContainer = styled.footer`
-    background-color: #2E7D32; /* Deep Forest Green */
+    background-color: #2E7D32;
     padding: 20px 0;
     color: #FFFFFF;
     text-align: center;
@@ -324,7 +368,7 @@ function Home() {
             <CountersSection>
                 <Counter>
                     <CounterNumber>150</CounterNumber>
-                    <CounterLabel>Current Food Banks</CounterLabel>
+                   <CounterLabel>Current Food Banks</CounterLabel>
                 </Counter>
                 <Counter>
                     <CounterNumber>10,000</CounterNumber>
@@ -367,3 +411,4 @@ function Home() {
 }
 
 export default Home;
+
